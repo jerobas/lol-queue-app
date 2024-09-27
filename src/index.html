@@ -83,10 +83,20 @@
         const notyf = new Notyf();
 
         window.sys.onUpdateDownloaded(() => {
-          notyf.success(
-            "A new version was downloaded, the app will be restart"
-          );
+          notyf.success("A new version was downloaded, the app will restart.");
           window.sys.update();
+        });
+
+        window.sys.onUpdateAvailable(() => {
+          notyf.info("Update available. Downloading...");
+        });
+
+        window.sys.onUpdateNotAvailable(() => {
+          notyf.success("No updates available.");
+        });
+
+        window.sys.onUpdateError((error) => {
+          notyf.error(`Error during update: ${error}`);
         });
 
         fetch("http://localhost:3000/start", {

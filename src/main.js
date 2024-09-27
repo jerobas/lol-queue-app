@@ -101,6 +101,18 @@ const createWindow = () => {
 
   autoUpdater.checkForUpdatesAndNotify();
 
+  autoUpdater.on("update-available", () => {
+    win.webContents.send("update_available");
+  });
+
+  autoUpdater.on("update-not-available", () => {
+    win.webContents.send("update_not_available");
+  });
+
+  autoUpdater.on("error", (err) => {
+    win.webContents.send("update_error", err);
+  });
+
   autoUpdater.on("update-downloaded", () => {
     win.webContents.send("update_downloaded");
   });

@@ -14,7 +14,7 @@ const msiCreator = new MSICreator({
   outputDirectory: OUT_DIR,
   description: packageJson.description,
   exe: packageJson.build.productName,
-  name: packageJson.build.productName,
+  name: packageJson.build.productName + "-" + packageJson.version,
   manufacturer: "Jerobas",
   version: packageJson.version,
   ui: {
