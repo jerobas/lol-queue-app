@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-const path = require("path");
+const { autoUpdater } = require("electron-updater");
 const express = require("express");
+const path = require("path");
 
 const {
   getLockFileInfo,
@@ -97,6 +98,12 @@ const createWindow = () => {
   });
   win.setMenuBarVisibility(false);
   win.loadURL("http://localhost:3000/home");
+
+  autoUpdater.checkForUpdatesAndNotify();
+
+  autoUpdater.on("update-downloaded", () => {
+    win.webContents.send("update_downloaded");
+  });
 };
 
 app.whenReady().then(() => {
@@ -113,6 +120,10 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+ipcMain.on("restart_app", () => {
+  autoUpdater.quitAndInstall();
 });
 
 ipcMain.on("window-control", (event, action) => {

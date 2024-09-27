@@ -10,3 +10,9 @@ contextBridge.exposeInMainWorld("windowControl", {
 contextBridge.exposeInMainWorld("appInfo", {
   version: version,
 });
+
+contextBridge.exposeInMainWorld("sys", {
+  update: () => ipcRenderer.send("restart_app"),
+  onUpdateDownloaded: (callback) =>
+    ipcRenderer.on("update_downloaded", callback),
+});

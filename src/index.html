@@ -82,28 +82,12 @@
       window.addEventListener("DOMContentLoaded", () => {
         const notyf = new Notyf();
 
-        fetch(
-          "https://api.github.com/repos/jerobas/lol-queue-app/releases/latest",
-          {
-            method: "GET",
-            headers: {
-              "User-Agent": "Node.js",
-              Accept: "application/vnd.github.v3+json",
-            },
-          }
-        )
-          .then(async (response) => {
-            if (!response.ok) {
-              throw new Error("Failed to fetch data");
-            }
-            let dt = await response.json();
-            if (window.appInfo.version.stable < dt.tag_name.replace("v", "")) {
-              notyf.success(window.appInfo.version.message);
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+        window.sys.onUpdateDownloaded(() => {
+          notyf.success(
+            "A new version was downloaded, the app will be restart"
+          );
+          window.sys.update();
+        });
 
         fetch("http://localhost:3000/start", {
           method: "POST",
