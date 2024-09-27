@@ -1,6 +1,6 @@
 {
   "name": "electron-queue-lol",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A simple way to accept a League of Legends queue",
   "main": "src/main.js",
   "scripts": {
@@ -27,7 +27,7 @@
           ]
         }
       ],
-      "icon": "build/icons/icon.ico"
+      "icon": "./src/lol.ico"
     },
     "msi": {
       "createDesktopShortcut": true,
