@@ -13,8 +13,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "jerobas",
-        "repo": "/jerobas/lol-queue-app"
+        "owner": "flaviozno",
+        "repo": "https://github.com/jerobas/lol-queue-app"
       }
     ],
     "productName": "AutoQueue",
