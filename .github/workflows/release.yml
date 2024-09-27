@@ -55,4 +55,4 @@ jobs:
           name: "Release v${{ env.VERSION }}"
           files: msi-installer/*.msi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN  }}
