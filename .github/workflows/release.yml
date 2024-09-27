@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: Install Wix Toolset
-        run: choco install wixtoolset --version=4.0.0
+        run: choco install wixtoolset --version=3.11.2
 
       - name: Build Electron App
         run: npm run build
