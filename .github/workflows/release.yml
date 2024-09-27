@@ -45,6 +45,8 @@ jobs:
       with:
         tag_name: v${{ env.VERSION }}
         name: "Release v${{ env.VERSION }}"
-        files: build/win-unpacked/*.exe
+        files: |
+          build/win-unpacked/*.exe
+          build/win-unpacked/resources/*.dll
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
