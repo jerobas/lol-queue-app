@@ -8,7 +8,8 @@ const {
   handleAccept,
 } = require("./utils/index");
 
-let mainWindow;
+const { GamePhase } = require("./constants/index");
+
 const localServer = express();
 
 localServer.use(express.static(path.join(__dirname, "assets")));
@@ -35,7 +36,7 @@ localServer.get("/events", (req, res) => {
     const intervalId = setInterval(async () => {
       try {
         const response = await handleAccept(api);
-        if (response.phase == "InGame") {
+        if (response.phase == GamePhase.INGAME) {
           clearInterval(intervalId);
           res.write(
             `data: ${JSON.stringify({
@@ -43,11 +44,20 @@ localServer.get("/events", (req, res) => {
             })}\n\n`
           );
         } else {
-          res.write(
-            `data: ${JSON.stringify({
-              message: response.phase,
-            })}\n\n`
-          );
+          if (response.phase == GamePhase.READYCHECK) {
+            handleAccept(api);
+            res.write(
+              `data: ${JSON.stringify({
+                message: response.phase,
+              })}\n\n`
+            );
+            clearInterval(intervalId);
+          } else
+            res.write(
+              `data: ${JSON.stringify({
+                message: response.phase,
+              })}\n\n`
+            );
         }
       } catch (error) {
         console.error("Error during handleAccept:", error.message);

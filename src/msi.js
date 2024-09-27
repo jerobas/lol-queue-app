@@ -7,7 +7,7 @@ const packageJson = require(path.join(__dirname, "../package.json"));
 const APP_DIR = path.join(__dirname, "../", "build", "win-unpacked");
 const BIULD_DIR = path.join(__dirname, "../", "build");
 const OUT_DIR = path.join(__dirname, "../", "msi-installer");
-const ICON_DIR = path.join(__dirname, "lol.ico");
+const ICON_DIR = path.join(__dirname, "assets", "lol.ico");
 
 const msiCreator = new MSICreator({
   appDirectory: APP_DIR,

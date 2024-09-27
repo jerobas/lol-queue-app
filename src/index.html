@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auto Queue</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
@@ -32,19 +37,34 @@
       }
     </style>
   </head>
-  <body class="text-center p-4" style="background-color: rgb(177, 177, 177);">
+  <body
+    class="text-center p-4"
+    style="-webkit-app-region: drag; background-color: rgb(177, 177, 177);"
+  >
     <h1 class="text-3xl font-bold" style="color: #7f7d33;">
       Auto Queue
     </h1>
 
     <div class="absolute top-0 right-0 mt-2 mr-2 flex space-x-2">
-      <button id="minimize-btn" class="w-8 h-8 rounded focus:outline-none">
+      <button
+        id="minimize-btn"
+        class="w-8 h-8 rounded focus:outline-none"
+        style="-webkit-app-region: no-drag;"
+      >
         <i class="fa-solid fa-window-minimize"></i>
       </button>
-      <button id="maximize-btn" class="w-8 h-8 rounded focus:outline-none">
+      <button
+        id="maximize-btn"
+        class="w-8 h-8 rounded focus:outline-none"
+        style="-webkit-app-region: no-drag;"
+      >
         <i class="fa-solid fa-window-restore"></i>
       </button>
-      <button id="close-btn" class="w-8 h-8 rounded focus:outline-none">
+      <button
+        id="close-btn"
+        class="w-8 h-8 rounded focus:outline-none"
+        style="-webkit-app-region: no-drag;"
+      >
         <i class="fa-solid fa-rectangle-xmark"></i>
       </button>
     </div>
@@ -60,6 +80,31 @@
 
     <script>
       window.addEventListener("DOMContentLoaded", () => {
+        const notyf = new Notyf();
+
+        fetch(
+          "https://api.github.com/repos/jerobas/lol-queue-app/releases/latest",
+          {
+            method: "GET",
+            headers: {
+              "User-Agent": "Node.js",
+              Accept: "application/vnd.github.v3+json",
+            },
+          }
+        )
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error("Failed to fetch data");
+            }
+            let dt = await response.json();
+            if (window.appInfo.version.stable < dt.tag_name.replace("v", "")) {
+              notyf.success(window.appInfo.version.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+
         fetch("http://localhost:3000/start", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

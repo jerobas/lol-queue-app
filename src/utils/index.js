@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
+const { GamePhase } = require("../constants");
 
 global.name = null;
 global.pid = null;
@@ -44,19 +45,19 @@ const checkPlayerPhase = async (api) => {
   try {
     let response = await api.get("/lol-gameflow/v1/session");
     if (
-      response.message === "No gameflow session exists." || // when in the menu
-      response.data.phase === "Lobby" || // when in the lobby without searching
-      response.data.phase === "Matchmaking" || // searching for a match
-      response.data.phase === "ReadyCheck" // ready to accept
+      response.message === GamePhase.NOTOK || // when in the menu
+      response.data.phase === GamePhase.LOBBY || // when in the lobby without searching
+      response.data.phase === GamePhase.MATCHMAKING || // searching for a match
+      response.data.phase === GamePhase.READYCHECK // ready to accept
     ) {
       // Player is not in a match.
       return {
         status: false,
-        phase: response.message ? "Menu" : response.data.phase,
+        phase: response.message ? GamePhase.MENU : response.data.phase,
       };
     } else {
       // Player is in a match
-      return { status: true, phase: "InGame" };
+      return { status: true, phase: GamePhase.INGAME };
     }
   } catch (error) {
     return {
@@ -78,11 +79,11 @@ const acceptMatch = async (api) => {
 const handleAccept = async (api) => {
   try {
     let state = await checkPlayerPhase(api);
-    if (state.phase === "InGame") {
+    if (state.phase === GamePhase.INGAME) {
       return state;
-    } else if (state.phase === "ReadyCheck") {
+    } else if (state.phase === GamePhase.READYCHECK) {
       const response = await api.get("/lol-matchmaking/v1/ready-check");
-      if (response.state === "InProgress") {
+      if (response.state === GamePhase.INPROGRESS) {
         await acceptMatch(api);
         return state;
       }
