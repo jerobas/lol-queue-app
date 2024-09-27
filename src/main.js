@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
 const { autoUpdater } = require("electron-updater");
 const express = require("express");
 const path = require("path");
@@ -99,6 +99,19 @@ const createWindow = () => {
   win.setMenuBarVisibility(false);
   win.loadURL("http://localhost:3000/home");
 
+  win.webContents.on("before-input-event", (event, input) => {
+    if (
+      (input.control || input.meta) &&
+      input.shift &&
+      input.key.toLowerCase() === "i"
+    ) {
+      event.preventDefault();
+    }
+    if (input.key === "F12") {
+      event.preventDefault();
+    }
+  });
+
   autoUpdater.checkForUpdatesAndNotify();
 
   autoUpdater.on("update-available", () => {
@@ -120,6 +133,10 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow();
+
+  globalShortcut.register("Ctrl+Shift+I", () => {});
+  globalShortcut.register("CmdOrCtrl+Shift+I", () => {});
+  globalShortcut.register("F12", () => {});
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
