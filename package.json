@@ -15,7 +15,7 @@
         "provider": "github",
         "owner": "jerobas",
         "repo": "lol-queue-app",
-        "token": "${GH_TOKEN}"
+        "token": "${env.GH_TOKEN}"
       }
     ],
     "productName": "AutoQueue",
