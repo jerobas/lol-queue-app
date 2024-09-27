@@ -1,0 +1,50 @@
+name: Build and Release Auto Queue
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write 
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+     steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x' 
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Electron App
+        run: npm run build
+    
+    - name: Get version from package.json
+      shell: bash
+      id: get_version
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+    
+    - name: Create Git Tag
+      run: |
+        git tag v${{ env.VERSION }} 
+        git push origin v${{ env.VERSION }}
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ env.VERSION }}
+        name: "Release v${{ env.VERSION }}"
+        files: build/win-unpacked/*.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

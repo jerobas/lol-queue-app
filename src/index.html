@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto Queue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Fredoka", sans-serif;
+      }
+      img {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      img.loaded {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body class="text-center p-4" style="background-color: rgb(177, 177, 177);">
+    <h1 class="text-3xl font-bold" style="color: #7f7d33;">
+      Auto Queue
+    </h1>
+
+    <div class="absolute top-0 right-0 mt-2 mr-2 flex space-x-2">
+      <button id="minimize-btn" class="w-8 h-8 rounded focus:outline-none">
+        <i class="fa-solid fa-window-minimize"></i>
+      </button>
+      <button id="maximize-btn" class="w-8 h-8 rounded focus:outline-none">
+        <i class="fa-solid fa-window-restore"></i>
+      </button>
+      <button id="close-btn" class="w-8 h-8 rounded focus:outline-none">
+        <i class="fa-solid fa-rectangle-xmark"></i>
+      </button>
+    </div>
+
+    <div class="mt-6 text-lg" id="server-updates"></div>
+
+    <footer
+      class="fixed bottom-0 left-0 w-full py-4 text-center"
+      style="color: #7f7d33;"
+    >
+      <p class="text-sm font-bold">@flaviozno</p>
+    </footer>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        fetch("http://localhost:3000/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }).then((response) => response.text());
+
+        const eventSource = new EventSource("http://localhost:3000/events");
+        eventSource.onmessage = (event) => {
+          const serverUpdates = document.getElementById("server-updates");
+          const message = JSON.parse(event.data).message;
+
+          let imgSrc = "";
+          if (message === "ReadyCheck") {
+            imgSrc = "./accept";
+          } else if (message === "You are not able to accept a queue") {
+            imgSrc = "./menu.png";
+          } else if (message === "Lobby") {
+            imgSrc = "./lobby.png";
+          } else if (message === "Matchmaking") {
+            imgSrc = "./queue.png";
+          }
+
+          if (imgSrc) {
+            const img = document.createElement("img");
+            img.src = imgSrc;
+            img.alt = message;
+            img.classList.add("mx-auto", "mt-4");
+            img.width = 300;
+            img.height = 300;
+
+            serverUpdates.innerHTML = "";
+            serverUpdates.appendChild(img);
+
+            img.onload = () => {
+              img.classList.add("loaded");
+            };
+          } else {
+            serverUpdates.textContent = message;
+          }
+        };
+
+        eventSource.onerror = () => {
+          console.error("Error with SSE connection");
+          eventSource.close();
+        };
+
+        document
+          .getElementById("minimize-btn")
+          .addEventListener("click", () => {
+            window.windowControl.minimize();
+          });
+
+        document
+          .getElementById("maximize-btn")
+          .addEventListener("click", () => {
+            window.windowControl.maximize();
+          });
+
+        document.getElementById("close-btn").addEventListener("click", () => {
+          window.windowControl.close();
+        });
+      });
+    </script>
+  </body>
+</html>

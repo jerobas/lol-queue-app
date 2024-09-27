@@ -1,0 +1,49 @@
+{
+  "name": "electron-queue-lol",
+  "version": "1.0.0",
+  "description": "A simple way to accept an league of legends queue",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron src/main.js",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.jerobas.AutoQueue",
+    "productName": "Auto Queue",
+    "files": [
+      "src/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "output": "build"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icons/icon.ico"
+    }
+  },
+  "keywords": [
+    "lol",
+    "AutoQueue",
+    "electron"
+  ],
+  "author": "Flávio Filho",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "electron": "^32.1.2",
+    "electron-builder": "^25.0.5"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "express": "^4.21.0",
+    "fs": "^0.0.1-security"
+  }
+}
