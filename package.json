@@ -10,13 +10,6 @@
   },
   "build": {
     "appId": "com.jerobas.AutoQueue",
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "flaviozno",
-        "repo": "https://github.com/jerobas/lol-queue-app"
-      }
-    ],
     "productName": "AutoQueue",
     "files": [
       "src/**/*",
