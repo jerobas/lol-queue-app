@@ -1,11 +1,11 @@
 {
   "name": "electron-queue-lol",
-  "version": "1.0.2",
-  "description": "A simple way to accept an league of legends queue",
+  "version": "1.0.4",
+  "description": "A simple way to accept a League of Legends queue",
   "main": "src/main.js",
   "scripts": {
     "start": "electron src/main.js",
-    "build": "electron-builder"
+    "build": "electron-builder --win msi"
   },
   "build": {
     "appId": "com.jerobas.AutoQueue",
@@ -29,7 +29,7 @@
     "win": {
       "target": [
         {
-          "target": "nsis",
+          "target": "msi",
           "arch": [
             "x64"
           ]
@@ -37,12 +37,12 @@
       ],
       "icon": "build/icons/icon.ico"
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
+    "msi": {
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "AutoQueue"
+      "shortcutName": "AutoQueue",
+      "oneClick": false,
+      "perMachine": false
     }
   },
   "keywords": [
@@ -55,11 +55,11 @@
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "electron": "^32.1.2",
-    "electron-builder": "^25.0.5"
+    "electron-builder": "^25.0.5",
+    "electron-wix-msi": "^5.1.3"
   },
   "dependencies": {
     "axios": "^1.7.7",
-    "express": "^4.21.0",
-    "fs": "^0.0.1-security"
+    "express": "^4.21.0"
   }
 }
