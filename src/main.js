@@ -37,14 +37,6 @@ localServer.get("/events", (req, res) => {
     const intervalId = setInterval(async () => {
       try {
         const response = await handleAccept(api);
-        if (response.phase == GamePhase.INGAME) {
-          clearInterval(intervalId);
-          res.write(
-            `data: ${JSON.stringify({
-              message: response.phase,
-            })}\n\n`
-          );
-        } else {
           if (response.phase == GamePhase.READYCHECK) {
             handleAccept(api);
             res.write(
@@ -52,14 +44,12 @@ localServer.get("/events", (req, res) => {
                 message: response.phase,
               })}\n\n`
             );
-            clearInterval(intervalId);
           } else
             res.write(
               `data: ${JSON.stringify({
                 message: response.phase,
               })}\n\n`
             );
-        }
       } catch (error) {
         console.error("Error during handleAccept:", error.message);
         clearInterval(intervalId);
