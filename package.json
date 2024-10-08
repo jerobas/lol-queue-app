@@ -8,6 +8,7 @@
     "url": "https://github.com/jerobas/lol-queue-app"
   },
   "scripts": {
+    "dev": "cross-env NODE_ENV=development electron src/main.js",
     "start": "electron src/main.js",
     "build": "electron-builder",
     "msi": "node src/msi.js"

@@ -7,21 +7,14 @@ const {
   createLolClient,
   handleAccept,
 } = require("./utils/index");
+const searchLockfileInput = require("./components/searchLockfileInput");
 
 const { GamePhase } = require("./constants/index");
 
 const localServer = express();
 
 localServer.use(express.static(path.join(__dirname, "assets")));
-
-localServer.post("/start", (req, res) => {
-  try {
-    res.status(200).send("The process started");
-  } catch (error) {
-    console.error("Error starting LoL client:", error.message);
-    res.status(500).send("Error initializing LoL client");
-  }
-});
+localServer.use(express.static(path.join(__dirname, "view")));
 
 localServer.get("/events", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
@@ -87,13 +80,16 @@ const createWindow = () => {
     },
   });
 
+  if (process.env.NODE_ENV === "development") {
+    win.webContents.openDevTools();
+  }
   win.setMenuBarVisibility(false);
   win.loadURL("http://localhost:3000/home");
 
   win.on('maximize', () => {
     mainWindow.unmaximize();
   });
-  
+
   win.webContents.on("before-input-event", (event, input) => {
     if (
       (input.control || input.meta) &&

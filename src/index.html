@@ -1,113 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auto Queue</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      * {
-        font-family: "Fredoka", sans-serif;
-      }
-      img {
-        opacity: 1;
-      }
-    </style>
-  </head>
-  <body
-    class="text-center p-4"
-    style="-webkit-app-region: drag; background-color: rgb(177, 177, 177)"
-  >
-    <h1 class="text-3xl font-bold" style="color: #7f7d33">Auto Queue</h1>
 
-    <div class="absolute top-0 right-0 mt-1 mr-2 flex space-x-1">
-      <button
-        id="minimize-btn"
-        class="w-8 h-8 rounded focus:outline-none"
-        style="-webkit-app-region: no-drag"
-      >
-        <i class="fa-solid fa-circle-minus"></i>
-      </button>
-      <button id="close-btn" style="-webkit-app-region: no-drag">
-        <i class="fa-solid fa-circle-xmark"></i>
-      </button>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auto Queue</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      font-family: "Fredoka", sans-serif;
+    }
 
-    <div class="mt-6 text-lg" id="server-updates"></div>
+    img {
+      opacity: 1;
+    }
+  </style>
+</head>
 
-    <script>
-      window.addEventListener("DOMContentLoaded", () => {
-        const notyf = new Notyf();
+<body class="text-center p-4" style="-webkit-app-region: drag; background-color: rgb(177, 177, 177)">
+  <h1 class="text-3xl font-bold" style="color: #7f7d33">Auto Queue</h1>
 
-        fetch("http://localhost:3000/start", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        }).then((response) => response.text());
+  <div class="absolute top-0 right-0 mt-1 mr-2 flex space-x-1">
+    <button id="minimize-btn" class="w-8 h-8 rounded focus:outline-none" style="-webkit-app-region: no-drag">
+      <i class="fa-solid fa-circle-minus"></i>
+    </button>
+    <button id="close-btn" style="-webkit-app-region: no-drag">
+      <i class="fa-solid fa-circle-xmark"></i>
+    </button>
+  </div>
 
-        const eventSource = new EventSource("http://localhost:3000/events");
-        eventSource.onmessage = (event) => {
-          const serverUpdates = document.getElementById("server-updates");
-          const message = JSON.parse(event.data).message;
+  <div class="mt-6 text-lg" id="server-updates"></div>
+  <div class="mt-4" id="controls"></div>
 
-          let imgSrc = "";
-          if (message === "ReadyCheck") {
-            imgSrc = "./accept";
-          } else if (message === "You are not able to accept a queue") {
-            imgSrc = "./menu.png";
-          } else if (message === "Lobby") {
-            imgSrc = "./lobby.png";
-          } else if (message === "Matchmaking") {
-            imgSrc = "./queue.png";
-          }
+  <script src="index.js" type="text/javascript"></script>
+</body>
 
-          if (imgSrc) {
-            const img = document.createElement("img");
-            img.src = imgSrc;
-            img.alt = message;
-            img.classList.add("mx-auto", "mt-4");
-            img.width = 300;
-            img.height = 300;
-
-            serverUpdates.innerHTML = "";
-            serverUpdates.appendChild(img);
-          } else {
-            serverUpdates.textContent = message;
-          }
-        };
-
-        eventSource.onerror = () => {
-          console.error("Error with SSE connection");
-          eventSource.close();
-        };
-
-        document
-          .getElementById("minimize-btn")
-          .addEventListener("click", () => {
-            window.windowControl.minimize();
-          });
-
-        document.getElementById("close-btn").addEventListener("click", () => {
-          window.windowControl.close();
-        });
-      });
-    </script>
-  </body>
 </html>
