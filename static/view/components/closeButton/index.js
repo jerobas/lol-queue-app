@@ -1,6 +1,6 @@
 const closeButton = () => {
     const button = /*html*/ `
-        <button id="close-button">
+        <button id="close-button" class="w-8 h-8 rounded focus:outline-none">
             <i class="fa-solid fa-circle-xmark"></i>
         </button>
     `;

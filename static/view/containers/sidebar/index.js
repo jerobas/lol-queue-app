@@ -1,4 +1,4 @@
-import burguerButton2 from '../../components/burguerButton/index.js';
+import pageButton from "../../components/pageButton";
 
 import "./styles.scss";
 
@@ -8,21 +8,19 @@ const sidebar = (burguerButton, parseHTML) => {
         </div>
     `;
 
-    const buttons = [
-        burguerButton2(),
-    ]
-
     const onRender = (sidebar) => {
         sidebar.appendChild(parseHTML(/*html*/ `
             <div style="height: 32px"></div>
         `));
 
-        buttons.map(([buttonString, onRender]) => {
+        console.log(pagesDict);
+
+        Object.values(pagesDict).forEach((page) => {
+            const [buttonString, onRender] = pageButton(page);
             const button = parseHTML(buttonString);
             onRender(button);
             button.classList.add("clickable")
             sidebar.appendChild(button);
-            return button;
         });
 
         burguerButton.addEventListener("click", () => {

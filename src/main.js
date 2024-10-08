@@ -15,6 +15,12 @@ const localServer = express();
 
 localServer.use(express.static(path.join("dist")));
 
+localServer.get("/globals.js", (req, res) => {
+  const filePath = path.join(__dirname, 'globals.js');
+  res.type('application/javascript');
+  res.sendFile(filePath);
+});
+
 localServer.get("/events", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
@@ -23,6 +29,12 @@ localServer.get("/events", async (req, res) => {
 
   try {
     await getLockFileInfo();
+
+    if (!global.port) {
+      searchLockfileInput();
+      return;
+    }
+
     const api = createLolClient();
 
     const intervalId = setInterval(async () => {
