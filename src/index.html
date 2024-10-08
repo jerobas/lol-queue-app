@@ -28,76 +28,34 @@
         font-family: "Fredoka", sans-serif;
       }
       img {
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-      }
-
-      img.loaded {
         opacity: 1;
       }
     </style>
   </head>
   <body
     class="text-center p-4"
-    style="-webkit-app-region: drag; background-color: rgb(177, 177, 177);"
+    style="-webkit-app-region: drag; background-color: rgb(177, 177, 177)"
   >
-    <h1 class="text-3xl font-bold" style="color: #7f7d33;">
-      Auto Queue
-    </h1>
+    <h1 class="text-3xl font-bold" style="color: #7f7d33">Auto Queue</h1>
 
-    <div class="absolute top-0 right-0 mt-2 mr-2 flex space-x-2">
+    <div class="absolute top-0 right-0 mt-1 mr-2 flex space-x-1">
       <button
         id="minimize-btn"
         class="w-8 h-8 rounded focus:outline-none"
-        style="-webkit-app-region: no-drag;"
+        style="-webkit-app-region: no-drag"
       >
-        <i class="fa-solid fa-window-minimize"></i>
+        <i class="fa-solid fa-circle-minus"></i>
       </button>
-      <button
-        id="maximize-btn"
-        class="w-8 h-8 rounded focus:outline-none"
-        style="-webkit-app-region: no-drag;"
-      >
-        <i class="fa-solid fa-window-restore"></i>
-      </button>
-      <button
-        id="close-btn"
-        class="w-8 h-8 rounded focus:outline-none"
-        style="-webkit-app-region: no-drag;"
-      >
-        <i class="fa-solid fa-rectangle-xmark"></i>
+      <button id="close-btn" style="-webkit-app-region: no-drag">
+        <i class="fa-solid fa-circle-xmark"></i>
       </button>
     </div>
 
     <div class="mt-6 text-lg" id="server-updates"></div>
 
-    <footer
-      class="fixed bottom-0 left-0 w-full py-4 text-center"
-      style="color: #7f7d33;"
-    >
-      <p class="text-sm font-bold">@flaviozno</p>
-    </footer>
-
     <script>
       window.addEventListener("DOMContentLoaded", () => {
         const notyf = new Notyf();
-
-        window.sys.onUpdateDownloaded(() => {
-          notyf.success("A new version was downloaded, the app will restart.");
-          window.sys.update();
-        });
-
-        window.sys.onUpdateAvailable(() => {
-          notyf.info("Update available. Downloading...");
-        });
-
-        window.sys.onUpdateNotAvailable(() => {
-          notyf.success("No updates available.");
-        });
-
-        window.sys.onUpdateError((error) => {
-          notyf.error(`Error during update: ${error}`);
-        });
 
         fetch("http://localhost:3000/start", {
           method: "POST",
@@ -130,10 +88,6 @@
 
             serverUpdates.innerHTML = "";
             serverUpdates.appendChild(img);
-
-            img.onload = () => {
-              img.classList.add("loaded");
-            };
           } else {
             serverUpdates.textContent = message;
           }
@@ -148,12 +102,6 @@
           .getElementById("minimize-btn")
           .addEventListener("click", () => {
             window.windowControl.minimize();
-          });
-
-        document
-          .getElementById("maximize-btn")
-          .addEventListener("click", () => {
-            window.windowControl.maximize();
           });
 
         document.getElementById("close-btn").addEventListener("click", () => {

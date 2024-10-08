@@ -1,5 +1,4 @@
 const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
-const { autoUpdater } = require("electron-updater");
 const express = require("express");
 const path = require("path");
 
@@ -37,19 +36,19 @@ localServer.get("/events", (req, res) => {
     const intervalId = setInterval(async () => {
       try {
         const response = await handleAccept(api);
-          if (response.phase == GamePhase.READYCHECK) {
-            handleAccept(api);
-            res.write(
-              `data: ${JSON.stringify({
-                message: response.phase,
-              })}\n\n`
-            );
-          } else
-            res.write(
-              `data: ${JSON.stringify({
-                message: response.phase,
-              })}\n\n`
-            );
+        if (response.phase == GamePhase.READYCHECK) {
+          handleAccept(api);
+          res.write(
+            `data: ${JSON.stringify({
+              message: response.phase,
+            })}\n\n`
+          );
+        } else
+          res.write(
+            `data: ${JSON.stringify({
+              message: response.phase,
+            })}\n\n`
+          );
       } catch (error) {
         console.error("Error during handleAccept:", error.message);
         clearInterval(intervalId);
@@ -78,17 +77,23 @@ localServer.listen(3000, () => {
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 386,
+    height: 678,
     frame: false,
+    resizable: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
     },
   });
+
   win.setMenuBarVisibility(false);
   win.loadURL("http://localhost:3000/home");
 
+  win.on('maximize', () => {
+    mainWindow.unmaximize();
+  });
+  
   win.webContents.on("before-input-event", (event, input) => {
     if (
       (input.control || input.meta) &&
@@ -100,24 +105,6 @@ const createWindow = () => {
     if (input.key === "F12") {
       event.preventDefault();
     }
-  });
-
-  autoUpdater.checkForUpdatesAndNotify();
-
-  autoUpdater.on("update-available", () => {
-    win.webContents.send("update_available");
-  });
-
-  autoUpdater.on("update-not-available", () => {
-    win.webContents.send("update_not_available");
-  });
-
-  autoUpdater.on("error", (err) => {
-    win.webContents.send("update_error", err);
-  });
-
-  autoUpdater.on("update-downloaded", () => {
-    win.webContents.send("update_downloaded");
   });
 };
 
@@ -141,10 +128,6 @@ app.on("window-all-closed", () => {
   }
 });
 
-ipcMain.on("restart_app", () => {
-  autoUpdater.quitAndInstall();
-});
-
 ipcMain.on("window-control", (event, action) => {
   const window = BrowserWindow.getFocusedWindow();
 
@@ -153,13 +136,6 @@ ipcMain.on("window-control", (event, action) => {
   switch (action) {
     case "minimize":
       window.minimize();
-      break;
-    case "maximize":
-      if (window.isMaximized()) {
-        window.restore();
-      } else {
-        window.maximize();
-      }
       break;
     case "close":
       window.close();
