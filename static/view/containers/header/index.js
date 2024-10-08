@@ -4,7 +4,7 @@ import closeButton from '../../components/closeButton/index.js';
 
 const header = (parseHTML) => {
     const headerString = /* html */ `
-        <div id="header" class="w-full absolute top-0 right-0 mt-1 px-2 flex justify-between items-center">
+        <div id="header" class="w-full absolute top-0 right-0 mt-2 px-2 flex justify-between items-center">
         </div>
     `;
 
@@ -34,6 +34,8 @@ const header = (parseHTML) => {
 
         header.appendChild(burguerButton);
         header.appendChild(buttonsHolder);
+
+        return burguerButton;
     };
 
     return [headerString, onRender];

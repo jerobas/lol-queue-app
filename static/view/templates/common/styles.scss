@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css');
-@import url('../../node_modules/notyf/notyf.min.css');
-@import './variables.scss';
+@import url('../../../../node_modules/notyf/notyf.min.css');
+@import '../../../styles/variables.scss';
 
 * {
     font-family: $main-font;
+    box-sizing: border-box;
 }
 
 img {
@@ -18,6 +19,7 @@ body {
     -webkit-app-region: drag;
     color: $primary-color;
     border-top: $primary-color 4px solid;
+    overflow: hidden;
 }
 
 .clickable {

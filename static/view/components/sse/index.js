@@ -1,7 +1,7 @@
-import accept from "../assets/accept.png";
-import menu from "../assets/menu.png";
-import lobby from "../assets/lobby.png";
-import queue from "../assets/queue.png";
+import accept from "../../../assets/accept.png";
+import menu from "../../../assets/menu.png";
+import lobby from "../../../assets/lobby.png";
+import queue from "../../../assets/queue.png";
 
 const sse = () => {
     const eventSource = new EventSource("http://localhost:3000/events");

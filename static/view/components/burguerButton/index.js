@@ -2,7 +2,7 @@ import './styles.scss';
 
 const burguerButton = () => {
     const button = /*html*/ `
-        <div id="burguer-button">
+        <div id="burguer-button" class="z-20">
             <span></span>
             <span></span>
             <span></span>

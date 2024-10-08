@@ -1,29 +1,19 @@
-// import { Notyf } from 'notyf';
-import sse from './sse.js';
-
-import header from './containers/header/index.js';
-
-import '../styles/index.scss';
+import home from './pages/home/index.js';
+import commonTemplate from './templates/common/index.js';
 
 const parser = new DOMParser();
 const parseHTML = (html) => parser.parseFromString(html, "text/html").body.firstChild;
 
 const index = () => {
-    // const notyf = Notyf();
+    const body = document.querySelector("body");
 
-    // notyf.success('A sala foi criada')
+    commonTemplate(body, parseHTML);
+    const [homeString, onHomeRender] = home();
+    const homeElement = parseHTML(homeString);
 
-    sse();
+    body.appendChild(homeElement);
 
-    const [headerString, onHeaderRender] = header(parseHTML);
-
-    const headerElement = parseHTML(headerString);
-    onHeaderRender(headerElement);
-
-    console.log(headerElement);
-    console.log(document.querySelector("body"));
-
-    document.querySelector("body").appendChild(headerElement);
+    onHomeRender(homeElement);
 }
 
 window.addEventListener("DOMContentLoaded", index);
