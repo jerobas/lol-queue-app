@@ -1,8 +1,9 @@
-const Notyf = require("https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js")
+import accept from "../assets/accept.png";
+import menu from "../assets/menu.png";
+import lobby from "../assets/lobby.png";
+import queue from "../assets/queue.png";
 
-const index = () => {
-    const notyf = new Notyf();
-
+const sse = () => {
     const eventSource = new EventSource("http://localhost:3000/events");
     eventSource.onmessage = (event) => {
         const serverUpdates = document.getElementById("server-updates");
@@ -10,13 +11,13 @@ const index = () => {
 
         let imgSrc = "";
         if (message === "ReadyCheck") {
-            imgSrc = "./accept";
+            imgSrc = accept;
         } else if (message === "You are not able to accept a queue") {
-            imgSrc = "./menu.png";
+            imgSrc = menu;
         } else if (message === "Lobby") {
-            imgSrc = "./lobby.png";
+            imgSrc = lobby;
         } else if (message === "Matchmaking") {
-            imgSrc = "./queue.png";
+            imgSrc = queue;
         }
 
         if (imgSrc) {
@@ -38,16 +39,6 @@ const index = () => {
         console.error("Error with SSE connection");
         eventSource.close();
     };
-
-    document
-        .getElementById("minimize-btn")
-        .addEventListener("click", () => {
-            window.windowControl.minimize();
-        });
-
-    document.getElementById("close-btn").addEventListener("click", () => {
-        window.windowControl.close();
-    });
 }
 
-window.addEventListener("DOMContentLoaded", index);
+export default sse;

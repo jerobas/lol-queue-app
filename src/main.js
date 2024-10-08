@@ -13,8 +13,7 @@ const { GamePhase } = require("./constants/index");
 
 const localServer = express();
 
-localServer.use(express.static(path.join(__dirname, "assets")));
-localServer.use(express.static(path.join(__dirname, "view")));
+localServer.use(express.static(path.join("dist")));
 
 localServer.get("/events", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
