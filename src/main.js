@@ -14,15 +14,6 @@ const localServer = express();
 
 localServer.use(express.static(path.join(__dirname, "assets")));
 
-localServer.post("/start", (req, res) => {
-  try {
-    res.status(200).send("The process started");
-  } catch (error) {
-    console.error("Error starting LoL client:", error.message);
-    res.status(500).send("Error initializing LoL client");
-  }
-});
-
 localServer.get("/events", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
@@ -88,6 +79,7 @@ const createWindow = () => {
   });
 
   win.setMenuBarVisibility(false);
+  // win.webContents.openDevTools()
   win.loadURL("http://localhost:3000/home");
 
   win.on('maximize', () => {

@@ -30,13 +30,17 @@
       img {
         opacity: 1;
       }
+      body {
+        width: 100%;
+        height: 100%;
+      }
     </style>
   </head>
   <body
     class="text-center p-4"
     style="-webkit-app-region: drag; background-color: rgb(177, 177, 177)"
   >
-    <h1 class="text-3xl font-bold" style="color: #7f7d33">Auto Queue</h1>
+    <h1 class="text-2xl font-bold" style="color: #7f7d33">Auto Queue</h1>
 
     <div class="absolute top-0 right-0 mt-1 mr-2 flex space-x-1">
       <button
@@ -51,16 +55,25 @@
       </button>
     </div>
 
-    <div class="mt-6 text-lg" id="server-updates"></div>
-
+    <div class="mt-4 text-lg" id="server-updates"></div>
+    <iframe
+      src="https://discord.com/widget?id=1291471408425205761&theme=dark"
+      class="w-full h-52 rounded-lg border-none"
+      sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+      style="-webkit-app-region: no-drag"
+    ></iframe>
+    <a
+        href="https://discord.gg/EzDj9rUk"
+        target="_blank"
+        class="inline-block mt-3 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors duration-300"
+        style="-webkit-app-region: no-drag"
+        >Join Game Room</a
+      >
     <script>
       window.addEventListener("DOMContentLoaded", () => {
         const notyf = new Notyf();
 
-        fetch("http://localhost:3000/start", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        }).then((response) => response.text());
+        notyf.success('A sala foi criada')
 
         const eventSource = new EventSource("http://localhost:3000/events");
         eventSource.onmessage = (event) => {
