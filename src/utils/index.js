@@ -1,7 +1,7 @@
 const fs = require("fs");
-const path = require("path");
 const axios = require("axios");
 const { GamePhase } = require("../constants");
+const { findLockfile } = require("./findLockfile");
 
 global.name = null;
 global.pid = null;
@@ -9,11 +9,8 @@ global.port = null;
 global.password = null;
 global.protocol = null;
 
-const getLockFileInfo = () => {
-  const data = fs.readFileSync(
-    path.join("C:", "Riot Games", "League of Legends", "lockfile"),
-    "utf8"
-  );
+const getLockFileInfo = async () => {
+  const data = await findLockfile();
 
   [
     global.name,

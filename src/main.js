@@ -24,32 +24,32 @@ localServer.post("/start", (req, res) => {
   }
 });
 
-localServer.get("/events", (req, res) => {
+localServer.get("/events", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
   res.flushHeaders();
 
   try {
-    getLockFileInfo();
+    await getLockFileInfo();
     const api = createLolClient();
 
     const intervalId = setInterval(async () => {
       try {
         const response = await handleAccept(api);
-          if (response.phase == GamePhase.READYCHECK) {
-            handleAccept(api);
-            res.write(
-              `data: ${JSON.stringify({
-                message: response.phase,
-              })}\n\n`
-            );
-          } else
-            res.write(
-              `data: ${JSON.stringify({
-                message: response.phase,
-              })}\n\n`
-            );
+        if (response.phase == GamePhase.READYCHECK) {
+          handleAccept(api);
+          res.write(
+            `data: ${JSON.stringify({
+              message: response.phase,
+            })}\n\n`
+          );
+        } else
+          res.write(
+            `data: ${JSON.stringify({
+              message: response.phase,
+            })}\n\n`
+          );
       } catch (error) {
         console.error("Error during handleAccept:", error.message);
         clearInterval(intervalId);
@@ -124,9 +124,9 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow();
 
-  globalShortcut.register("Ctrl+Shift+I", () => {});
-  globalShortcut.register("CmdOrCtrl+Shift+I", () => {});
-  globalShortcut.register("F12", () => {});
+  globalShortcut.register("Ctrl+Shift+I", () => { });
+  globalShortcut.register("CmdOrCtrl+Shift+I", () => { });
+  globalShortcut.register("F12", () => { });
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
