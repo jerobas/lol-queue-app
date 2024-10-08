@@ -1,10 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css');
 @import url('../../node_modules/notyf/notyf.min.css');
-
-$primary-color: #7f7d33;
-$background-color: #B1B1B1;
-$main-font: 'Fredoka One', sans-serif;
+@import './variables.scss';
 
 * {
     font-family: $main-font;

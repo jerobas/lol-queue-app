@@ -1,6 +1,12 @@
 // import { Notyf } from 'notyf';
 import sse from './sse.js';
+
+import header from './containers/header/index.js';
+
 import '../styles/index.scss';
+
+const parser = new DOMParser();
+const parseHTML = (html) => parser.parseFromString(html, "text/html").body.firstChild;
 
 const index = () => {
     // const notyf = Notyf();
@@ -9,17 +15,15 @@ const index = () => {
 
     sse();
 
-    const minimizeBtn = document.getElementById("minimize-btn");
-    minimizeBtn.addEventListener("click", () => {
-        window.windowControl.minimize();
-    });
-    minimizeBtn.classList.add("clickable");
+    const [headerString, onHeaderRender] = header(parseHTML);
 
-    const closeBtn = document.getElementById("close-btn");
-    closeBtn.addEventListener("click", () => {
-        window.windowControl.close();
-    });
-    closeBtn.classList.add("clickable");
+    const headerElement = parseHTML(headerString);
+    onHeaderRender(headerElement);
+
+    console.log(headerElement);
+    console.log(document.querySelector("body"));
+
+    document.querySelector("body").appendChild(headerElement);
 }
 
 window.addEventListener("DOMContentLoaded", index);
