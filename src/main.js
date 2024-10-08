@@ -84,6 +84,7 @@ const createWindow = () => {
     win.webContents.openDevTools();
   }
   win.setMenuBarVisibility(false);
+  // win.webContents.openDevTools()
   win.loadURL("http://localhost:3000/home");
 
   win.on('maximize', () => {
