@@ -44,7 +44,8 @@
     "productName": "Qeemo",
     "files": [
       "src/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "dist/**/*"
     ],
     "directories": {
       "output": "build"
