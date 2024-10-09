@@ -1,7 +1,6 @@
-# Auto Queue - League of Legends Queue Automation
+# Queemo - League of Legends Queue Automation
 
-Auto Queue is a simple Electron application that automatically accepts the queue in League of Legends. This project is built using Electron, and the installer will create an executable (`.exe`) to run the application.
-
+Queemo is a simple Electron application that automatically accepts the queue in League of Legends. This project is built using Electron, and the installer will create an executable (`.exe`) to run the application.
 
 ## Installation
 
@@ -11,4 +10,3 @@ Auto Queue is a simple Electron application that automatically accepts the queue
 
 2. **Running the Application**:
     - After completing the installation you can run the `Auto Queue` app from your desktop shortcut or start menu.
-

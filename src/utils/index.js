@@ -1,7 +1,6 @@
 const fs = require("fs");
 const axios = require("axios");
 const { GamePhase } = require("../constants");
-const { findLockfile } = require("./findLockfile");
 
 global.name = null;
 global.pid = null;
@@ -10,15 +9,21 @@ global.password = null;
 global.protocol = null;
 
 const getLockFileInfo = async () => {
-  const data = await findLockfile();
+  try {
+    const module = await import("./findLockfile.mjs")
+    const data = await module.readLockfile();
+    if (!data) return false;
 
-  [
-    global.name,
-    global.pid,
-    global.port,
-    global.password,
-    global.protocol,
-  ] = data.split(":");
+    [
+      global.name,
+      global.pid,
+      global.port,
+      global.password,
+      global.protocol,
+    ] = data.split(":");
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const createLolClient = () => {

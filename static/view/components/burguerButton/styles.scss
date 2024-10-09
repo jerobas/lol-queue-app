@@ -1,0 +1,89 @@
+@use "sass:math";
+@import "../../../styles/variables.scss";
+
+/* Burger Button */
+
+$button-width: 20px;
+
+#burguer-button {
+    width: $button-width;
+    /* Set the base width */
+    height: calc($button-width * 0.75);
+    /* 45px height relative to width */
+    position: relative;
+    /* 50px margin relative to width */
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: .5s ease-in-out;
+    -moz-transition: .5s ease-in-out;
+    -o-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+    cursor: pointer;
+}
+
+#burguer-button span {
+    display: block;
+    position: absolute;
+    height: calc($button-width * 0.20);
+    /* 9px height relative to width */
+    width: 100%;
+    /* Full width of the button */
+    background: $primary-color;
+    border-radius: calc($button-width * 0.15);
+    /* 9px border-radius relative to width */
+    left: 0;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: .25s ease-in-out;
+    -moz-transition: .25s ease-in-out;
+    -o-transition: .25s ease-in-out;
+    transition: .25s ease-in-out;
+}
+
+#burguer-button span:nth-child(1) {
+    top: 0;
+}
+
+#burguer-button span:nth-child(2),
+#burguer-button span:nth-child(3) {
+    top: calc($button-width * 1/3);
+    /* 18px top relative to width */
+}
+
+#burguer-button span:nth-child(4) {
+    top: calc($button-width * 2/3);
+    /* 36px top relative to width */
+}
+
+#burguer-button.open span:nth-child(1) {
+    top: calc($button-width * 1/3);
+    ;
+    width: 0%;
+    left: 50%;
+}
+
+#burguer-button.open span:nth-child(2) {
+    /* 18px top relative to width */
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+#burguer-button.open span:nth-child(3) {
+    /* 18px top relative to width */
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+#burguer-button.open span:nth-child(4) {
+    top: calc($button-width * 1/3);
+    width: 0%;
+    left: 50%;
+}

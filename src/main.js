@@ -13,8 +13,13 @@ const { GamePhase } = require("./constants/index");
 
 const localServer = express();
 
-localServer.use(express.static(path.join(__dirname, "assets")));
-localServer.use(express.static(path.join(__dirname, "view")));
+localServer.use(express.static(path.join("dist")));
+
+localServer.get("/globals.js", (req, res) => {
+  const filePath = path.join(__dirname, 'globals.js');
+  res.type('application/javascript');
+  res.sendFile(filePath);
+});
 
 localServer.get("/events", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
@@ -24,6 +29,12 @@ localServer.get("/events", async (req, res) => {
 
   try {
     await getLockFileInfo();
+
+    if (!global.port) {
+      searchLockfileInput();
+      return;
+    }
+
     const api = createLolClient();
 
     const intervalId = setInterval(async () => {
@@ -84,6 +95,7 @@ const createWindow = () => {
     win.webContents.openDevTools();
   }
   win.setMenuBarVisibility(false);
+  // win.webContents.openDevTools()
   win.loadURL("http://localhost:3000/home");
 
   win.on('maximize', () => {
