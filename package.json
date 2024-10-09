@@ -1,7 +1,33 @@
 {
-  "name": "electron-queue-lol",
-  "version": "1.1.7",
-  "description": "A simple way to accept a League of Legends queue",
+  "name": "qeemo",
+  "version": "1.1.8",
+  "description": "A simpler way to accept a League of Legends queue",
+  "keywords": [
+    "League of Legends",
+    "league of legends",
+    "LoL",
+    "lol",
+    "Autoqueue",
+    "autoqueue",
+    "Electron",
+    "electron",
+    "Webpack",
+    "webpack",
+    "Automation",
+    "automation",
+    "Express",
+    "express"
+  ],
+  "homepage": "https://github.com/jerobas/lol-queue-app",
+  "bugs": {
+    "url": "https://github.com/jerobas/lol-queue-app/issues",
+    "email": "jerobas.alfred@gmail.com"
+  },
+  "license": "ISC",
+  "author": "Flávio Filho <flavio.vezono@ufu.br> (https://github.com/flaviozno)",
+  "contributors": [
+    "João Vitor Cezario Sanches <joaovitormanolo@gmail.com> (https://github.com/jaonolo)"
+  ],
   "main": "src/main.js",
   "repository": {
     "type": "git",
@@ -11,11 +37,11 @@
     "dev": "concurrently \"webpack serve --mode development\" \"wait-on http://localhost:8080 && cross-env NODE_ENV=development electron src/main.js\"",
     "start": "webpack && cross-env NODE_ENV=development electron src/main.js",
     "build": "webpack && electron-builder",
-    "msi": "node src/msi.js"
+    "msi": "webpack && node src/msi.js"
   },
   "build": {
-    "appId": "com.jerobas.AutoQueue",
-    "productName": "AutoQueue",
+    "appId": "com.jerobas.Qeemo",
+    "productName": "Qeemo",
     "files": [
       "src/**/*",
       "node_modules/**/*"
@@ -32,23 +58,16 @@
           ]
         }
       ],
-      "icon": "./src/assets/lol.ico"
+      "icon": "./static/assets/android-chrome-512x512.png"
     },
     "msi": {
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "AutoQueue",
+      "shortcutName": "Qeemo",
       "oneClick": false,
       "perMachine": false
     }
   },
-  "keywords": [
-    "lol",
-    "AutoQueue",
-    "electron"
-  ],
-  "author": "Flávio Filho",
-  "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.25.7",
     "@babel/preset-env": "^7.25.7",

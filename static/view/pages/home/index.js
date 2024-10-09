@@ -6,8 +6,8 @@ const home = (parseHTML) => {
         <div class="mt-4 text-lg" id="server-updates"></div>
     `;
 
-    const onRender = (homeElement) => {
-        const [teemoImageString, onTeemoImageRender, onTeemoImageUpdate] = teemoImage(parseHTML);
+    const onRender = async (homeElement) => {
+        const [teemoImageString, onTeemoImageRender, onTeemoImageUpdate] = await teemoImage(parseHTML);
         const teemoImageElement = parseHTML(teemoImageString);
         homeElement.appendChild(teemoImageElement);
         onTeemoImageRender(teemoImageElement);
@@ -19,7 +19,7 @@ const home = (parseHTML) => {
 
         eventSource.onmessage = (event) => {
             const message = JSON.parse(event.data).message;
-            onTeemoImageUpdate(message);
+            //onTeemoImageUpdate(message);
         };
     }
 

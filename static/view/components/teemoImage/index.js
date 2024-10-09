@@ -3,6 +3,8 @@ import menu from "../../../assets/menu.png";
 import lobby from "../../../assets/lobby.png";
 import queue from "../../../assets/queue.png";
 
+import loading from "../../components/loading";
+
 let teemoImageElement = null;
 
 const imageDict = {
@@ -14,7 +16,6 @@ const imageDict = {
 
 const teemoImageOrText = (message) => {
     let imgString = '';
-    console.log(message);
 
     if (!message) {
         imgString =  /* html */ `<p>Erro na comunicação com o servidor</p>`;
@@ -26,14 +27,20 @@ const teemoImageOrText = (message) => {
     return imgString;
 }
 
-const teemoImage = (parseHTML) => {
-    let imgString = '<p></p>';
+const teemoImage = async (parseHTML) => {
+    const [loadingString, onLoadingRender] = await loading();
 
-    const onRender = (imageElement) => teemoImageElement = imageElement;
+    let imgString = loadingString;
+
+    const onRender = (imageElement) => {
+        teemoImageElement = imageElement
+        onLoadingRender();
+    };
 
     const onUpdate = (message) => {
         const parsedHTML = parseHTML(teemoImageOrText(message));
         teemoImageElement.replaceWith(parsedHTML);
+        teemoImageElement = parsedHTML;
     }
 
     return [imgString, onRender, onUpdate];

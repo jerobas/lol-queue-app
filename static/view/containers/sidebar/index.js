@@ -13,8 +13,6 @@ const sidebar = (burguerButton, parseHTML) => {
             <div style="height: 32px"></div>
         `));
 
-        console.log(pagesDict);
-
         Object.values(pagesDict).forEach((page) => {
             const [buttonString, onRender] = pageButton(page);
             const button = parseHTML(buttonString);

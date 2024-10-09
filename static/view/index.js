@@ -13,10 +13,10 @@ const body = document.querySelector("body");
 
 const goTo = (page) => pagesRender(page);
 
-const pagesRender = (page) => {
+const pagesRender = async (page) => {
     document.querySelector(".page")?.remove();
 
-    const [pageString, onPageRender] = page(parseHTML);
+    const [pageString, onPageRender] = await page(parseHTML);
     const pageElement = parseHTML(pageString);
     pageElement.classList.add("page");
     body.appendChild(pageElement);
