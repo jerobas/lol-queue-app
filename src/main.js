@@ -13,7 +13,7 @@ const { GamePhase } = require("./constants/index");
 
 const localServer = express();
 
-localServer.use(express.static(path.join("dist")));
+localServer.use(express.static(path.join(__dirname, "../", "dist")));
 
 localServer.get("/globals.js", (req, res) => {
   const filePath = path.join(__dirname, 'globals.js');

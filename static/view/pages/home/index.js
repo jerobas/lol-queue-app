@@ -19,7 +19,7 @@ const home = (parseHTML) => {
 
         eventSource.onmessage = (event) => {
             const message = JSON.parse(event.data).message;
-            //onTeemoImageUpdate(message);
+            onTeemoImageUpdate(message);
         };
     }
 
