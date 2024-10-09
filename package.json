@@ -1,6 +1,6 @@
 {
   "name": "qeemo",
-  "version": "1.1.8",
+  "version": "1.1.7",
   "description": "A simpler way to accept a League of Legends queue",
   "keywords": [
     "League of Legends",
@@ -37,7 +37,7 @@
     "dev": "concurrently \"webpack serve --mode development\" \"wait-on http://localhost:8080 && cross-env NODE_ENV=development electron src/main.js\"",
     "start": "webpack && cross-env NODE_ENV=development electron src/main.js",
     "build": "webpack && electron-builder",
-    "msi": "webpack && node src/msi.js"
+    "msi": "node src/msi.js"
   },
   "build": {
     "appId": "com.jerobas.Qeemo",
