@@ -26,7 +26,8 @@
   "license": "ISC",
   "author": "Flávio Filho <flavio.vezono@ufu.br> (https://github.com/flaviozno)",
   "contributors": [
-    "João Vitor Cezario Sanches <joaovitormanolo@gmail.com> (https://github.com/jaonolo)"
+    "João Vitor Cezario Sanches <joaovitormanolo@gmail.com> (https://github.com/jaonolo)",
+    "Eduardo Borges <> (https://www.linkedin.com/in/eduardo-borges-anim)"
   ],
   "main": "src/main.js",
   "repository": {
@@ -34,8 +35,9 @@
     "url": "https://github.com/jerobas/lol-queue-app"
   },
   "scripts": {
-    "dev": "concurrently \"webpack serve --mode development\" \"wait-on http://localhost:8080 && cross-env NODE_ENV=development electron src/main.js\"",
-    "start": "webpack && cross-env NODE_ENV=development electron src/main.js",
+    "hotexpress": "wait-on http://localhost:8080 && cross-env HOT_RELOAD=true electron src/main.js",
+    "hotreload": "concurrently \"webpack serve\" \"npm run hotexpress\"",
+    "start": "webpack && electron src/main.js",
     "build": "webpack && electron-builder",
     "msi": "node src/msi.js"
   },
