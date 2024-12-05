@@ -1,5 +1,5 @@
 import React from "react";
-import { useVoip } from "../../../../src/hooks/index";
+import { useVoip } from "../../../../src/hooks/VoipContext";
 
 const Voip = () => {
   const {
