@@ -109,7 +109,6 @@ const startServer = () => {
             currentPhase = state.phase;
           }
 
-          console.log(state.phase)
           if (state.phase === GamePhase.READYCHECK) {
             await handleAccept(api);
             res.write(
@@ -118,11 +117,14 @@ const startServer = () => {
                 phase: GamePhase.READYCHECK,
               })}\n\n`
             );
-          } else if (state.phase === GamePhase.POSTGAME) {
-            console.log('aki')
+          } else if (
+            state.phase === GamePhase.POSTGAME ||
+            state.phase === GamePhase.RECONNECT
+          ) {
+            console.log("aki");
             res.write(
               `data: ${JSON.stringify({
-                phase: GamePhase.POSTGAME,
+                phase: state.phase,
               })}\n\n`
             );
           } else if (state.phase === GamePhase.INGAME) {

@@ -63,8 +63,9 @@ const Voip = ({ eventSource }) => {
         setPlayerName(JSON.parse(event.data).localPlayer.name);
         setLoading(false);
       } else if (
-        JSON.parse(event.data).phase &&
-        JSON.parse(event.data).phase == "WaitingForStats"
+        (JSON.parse(event.data).phase &&
+          JSON.parse(event.data).phase == "WaitingForStats") ||
+        JSON.parse(event.data).phase == "Reconnect"
       ) {
         setLoading(true);
         leaveRoom();

@@ -127,7 +127,7 @@ export const VoipProvider = ({ children }) => {
       myAudioRef.current.getTracks().forEach((track) => track.stop());
       myAudioRef.current = null;
     }
-    setAudioStreams({});
+    setAudioStreams();
     setMuteStates({});
     setUsers([]);
     setJoinedRoom(false);

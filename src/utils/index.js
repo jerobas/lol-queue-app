@@ -41,12 +41,14 @@ const createLolClient = () => {
 const checkPlayerPhase = async (api) => {
   try {
     let response = await api.get("/lol-gameflow/v1/session");
+    console.log("response.data.phase", response.data.phase)
     if (
       response.message === GamePhase.NOTOK || // when in the menu
       response.data.phase === GamePhase.LOBBY || // when in the lobby without searching
       response.data.phase === GamePhase.MATCHMAKING || // searching for a match
       response.data.phase === GamePhase.READYCHECK || // ready to accept
-      response.data.phase === GamePhase.POSTGAME // acabou partida
+      response.data.phase === GamePhase.POSTGAME || // acabou partida
+      response.data.phase === GamePhase.RECONNECT
     ) {
       // Player is not in a match.
       return {
