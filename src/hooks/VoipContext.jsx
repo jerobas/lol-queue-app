@@ -164,7 +164,7 @@ export const VoipProvider = ({ children }) => {
         audioStreams,
         muteStates,
         toggleMute,
-        myAudioRef,
+        myAudioRef
       }}
     >
       {children}

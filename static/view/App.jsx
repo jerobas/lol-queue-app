@@ -6,6 +6,7 @@ import sse from "../utils/sse";
 import Voip from "./pages/Voip/voip";
 import { VoipProvider } from "../../src/hooks/VoipContext";
 import { ToastProvider } from "../../src/hooks/ToastContext";
+import { GameProvider } from "../../src/hooks/GameContext";
 
 const PAGES = {
   home: { component: Home, icon: "fa-solid fa-home", name: "home" },
@@ -30,11 +31,13 @@ const App = () => {
 
   return (
     <ToastProvider>
-      <VoipProvider>
-        <CommonTemplate goToPage={setCurrentPage} pagesDict={PAGES}>
-          {renderPage(currentPage)}
-        </CommonTemplate>
-      </VoipProvider>
+      <GameProvider>
+        <VoipProvider>
+          <CommonTemplate goToPage={setCurrentPage} pagesDict={PAGES}>
+            {renderPage(currentPage)}
+          </CommonTemplate>
+        </VoipProvider>
+      </GameProvider>
     </ToastProvider>
   );
 };

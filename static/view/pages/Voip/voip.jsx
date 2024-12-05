@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useVoip } from "../../../../src/hooks/VoipContext";
+import { useGame } from "../../../../src/hooks/GameContext";
+import useChampion from "../../../../src/hooks/useChampion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMicrophone,
+  faMicrophoneSlash,
+} from "@fortawesome/free-solid-svg-icons";
 
-const Voip = () => {
+const Voip = ({ eventSource }) => {
   const {
-    roomId,
-    playerName,
     setRoomId,
     setPlayerName,
     joinedRoom,
@@ -16,74 +21,133 @@ const Voip = () => {
     myAudioRef,
   } = useVoip();
 
+  const [loading_, setLoading] = useState(true);
+
+  const { setTeams } = useGame();
+
+  useEffect(() => {
+    eventSource.onmessage = (event) => {
+      if (
+        JSON.parse(event.data).phase &&
+        JSON.parse(event.data).phase == "InGame"
+      ) {
+        const data = JSON.parse(event.data).message;
+        const isT1 = data?.teamOne.some(
+          (player) =>
+            player.summonerId === JSON.parse(event.data).localPlayer.id
+        );
+        const t1 = data?.teamOne.map((player) => {
+          const championSelection = data?.playerChampionSelections.find(
+            (champion) =>
+              champion.summonerInternalName === player.summonerInternalName
+          );
+
+          return {
+            ...player,
+            championId: championSelection?.championId,
+          };
+        });
+        const t2 = data?.teamTwo.map((player) => {
+          const championSelection = data?.playerChampionSelections.find(
+            (champion) =>
+              champion.summonerInternalName === player.summonerInternalName
+          );
+
+          return {
+            ...player,
+            championId: championSelection?.championId,
+          };
+        });
+        setRoomId(`${data?.gameId}${isT1 ? "T1" : "T2"}`);
+        setTeams({ teamOne: t1, teamTwo: t2 });
+        setPlayerName(JSON.parse(event.data).localPlayer.name);
+        setLoading(false);
+      }
+    };
+  }, [eventSource]);
+
   return (
     <div
       style={{
         padding: "20px",
         textAlign: "center",
         WebkitAppRegion: "no-drag",
+        fontFamily: "Arial, sans-serif",
       }}
     >
-      {!joinedRoom ? (
-        <div>
-          <h1>Entre em uma Sala</h1>
-          <input
-            type="text"
-            placeholder="Nome da Sala"
-            value={roomId}
-            onChange={(e) => setRoomId(e.target.value)}
-            style={{ margin: "10px", padding: "10px", width: "300px" }}
-          />
-          <br />
-          <input
-            type="text"
-            placeholder="Seu Nome"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            style={{ margin: "10px", padding: "10px", width: "300px" }}
-          />
-          <br />
-          <button
-            onClick={joinRoom}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Entrar na Sala
-          </button>
-        </div>
+      {!joinedRoom && !loading_ ? (
+        <button
+          onClick={joinRoom}
+          style={{
+            padding: "12px 20px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "16px",
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          Entrar em Call
+        </button>
       ) : (
         <div>
-          <h1>Você está na sala: {roomId}</h1>
-          <ul>
+          <ul
+            style={{
+              listStyleType: "none",
+              padding: 0,
+              maxWidth: "400px",
+              margin: "20px auto",
+              textAlign: "left",
+            }}
+          >
             {users.map((user) => (
-              <li key={user.id} style={{ margin: "10px 0" }}>
+              <li
+                key={user.id}
+                style={{
+                  marginBottom: "10px",
+                  padding: "10px",
+                  border: "1px solid #ddd",
+                  borderRadius: "5px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: "#f9f9f9",
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                }}
+              >
                 {user.name}
                 <button
                   onClick={() => toggleMute(user.name)}
                   style={{
-                    marginLeft: "10px",
-                    padding: "5px 10px",
-                    backgroundColor: muteStates[user.name]
-                      ? "#4CAF50"
-                      : "#f44336",
-                    color: "white",
+                    backgroundColor: "transparent",
                     border: "none",
-                    borderRadius: "3px",
                     cursor: "pointer",
                   }}
                 >
-                  {muteStates[user.name] ? "unmute" : "mute"}
+                  <FontAwesomeIcon
+                    icon={
+                      muteStates[user.name] ? faMicrophoneSlash : faMicrophone
+                    }
+                    style={{
+                      fontSize: "18px",
+                      color: muteStates[user.name] ? "#e74c3c" : "#2ecc71",
+                    }}
+                  />
                 </button>
               </li>
             ))}
           </ul>
-          <div>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: "15px",
+            }}
+          >
             <audio
               ref={(ref) => {
                 if (ref && myAudioRef.current) {
@@ -91,10 +155,10 @@ const Voip = () => {
                 }
               }}
               muted
-            //   controls
               autoPlay
               style={{
-                margin: "10px",
+                width: "150px",
+                height: "40px",
                 borderRadius: "5px",
                 boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
               }}
@@ -112,15 +176,16 @@ const Voip = () => {
                         }
                       }}
                       autoPlay
-                    //   controls
                       style={{
-                        margin: "10px",
+                        width: "150px",
+                        height: "40px",
                         borderRadius: "5px",
                         boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
                       }}
                     />
                   );
                 }
+                return null;
               })}
           </div>
         </div>
