@@ -1,9 +1,12 @@
+@import "../../../styles/variables.scss";
+
 #sidebar {
     /* Full width of the sidebar */
     -webkit-transform: translateX(-100%);
     -moz-transform: translateX(-100%);
     -o-transform: translateX(-100%);
     transform: translateX(-100%);
+    // background-color: $background-color;
 }
 
 #sidebar.open {
