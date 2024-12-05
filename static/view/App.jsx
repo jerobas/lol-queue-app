@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import CommonTemplate from "./templates/Common";
 import Home from "./pages/Home";
 import Settings from "./pages/Settings";
-import Discord from "./pages/Discord";
 import sse from "../utils/sse";
-import Voip from "./pages/Voip";
+import Voip from "./pages/Voip/voip";
+import { VoipProvider } from "../../src/hooks";
 
 const PAGES = {
     home: { component: Home, icon: "fa-solid fa-home", name: "home" },
     settings: { component: Settings, icon: "fa-solid fa-gear", name: "settings" },
-    discord: { component: Discord, icon: "fa-brands fa-discord", name: "discord" },
     voip: { component: Voip, icon: "fa-solid fa-phone", name: "voip" },
 };
 
@@ -29,7 +28,7 @@ const App = () => {
         };
     }, [eventSource]);
 
-    return <CommonTemplate goToPage={setCurrentPage} pagesDict={PAGES} >{renderPage(currentPage)}</CommonTemplate>;
+    return <VoipProvider><CommonTemplate goToPage={setCurrentPage} pagesDict={PAGES} >{renderPage(currentPage)}</CommonTemplate></VoipProvider>
 };
 
 export default App;
