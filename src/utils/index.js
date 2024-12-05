@@ -41,7 +41,6 @@ const createLolClient = () => {
 const checkPlayerPhase = async (api) => {
   try {
     let response = await api.get("/lol-gameflow/v1/session");
-    console.log("response.data.phase", response.data.phase)
     if (
       response.message === GamePhase.NOTOK || // when in the menu
       response.data.phase === GamePhase.LOBBY || // when in the lobby without searching

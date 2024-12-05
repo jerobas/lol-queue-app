@@ -127,14 +127,22 @@ export const VoipProvider = ({ children }) => {
       myAudioRef.current.getTracks().forEach((track) => track.stop());
       myAudioRef.current = null;
     }
+
+    if (peerInstanceRef.current) {
+      Object.values(peerInstanceRef.current.connections).forEach(
+        (connectionArray) => {
+          connectionArray.forEach((connection) => {
+            if (connection.close) connection.close();
+          });
+        }
+      );
+      peerInstanceRef.current.disconnect();
+    }
+
     setAudioStreams();
     setMuteStates({});
     setUsers([]);
     setJoinedRoom(false);
-
-    if (peerInstanceRef.current) {
-      peerInstanceRef.current.disconnect();
-    }
 
     notify.success("O jogo terminou, vaza!");
   }, [roomId, playerName]);
