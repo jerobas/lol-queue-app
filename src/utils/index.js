@@ -10,17 +10,12 @@ global.protocol = null;
 
 const getLockFileInfo = async () => {
   try {
-    const module = await import("./findLockfile.mjs")
+    const module = await import("./findLockfile.mjs");
     const data = await module.readLockfile();
     if (!data) return false;
 
-    [
-      global.name,
-      global.pid,
-      global.port,
-      global.password,
-      global.protocol,
-    ] = data.split(":");
+    [global.name, global.pid, global.port, global.password, global.protocol] =
+      data.split(":");
   } catch (error) {
     console.error(error);
   }
@@ -46,11 +41,14 @@ const createLolClient = () => {
 const checkPlayerPhase = async (api) => {
   try {
     let response = await api.get("/lol-gameflow/v1/session");
+    console.log("response.data.phase", response.data.phase)
     if (
       response.message === GamePhase.NOTOK || // when in the menu
       response.data.phase === GamePhase.LOBBY || // when in the lobby without searching
       response.data.phase === GamePhase.MATCHMAKING || // searching for a match
-      response.data.phase === GamePhase.READYCHECK // ready to accept
+      response.data.phase === GamePhase.READYCHECK || // ready to accept
+      response.data.phase === GamePhase.POSTGAME || // acabou partida
+      response.data.phase === GamePhase.RECONNECT
     ) {
       // Player is not in a match.
       return {
@@ -59,7 +57,11 @@ const checkPlayerPhase = async (api) => {
       };
     } else {
       // Player is in a match
-      return { status: true, phase: GamePhase.INGAME };
+      return {
+        status: true,
+        phase: GamePhase.INGAME,
+        gameData: response.data.gameData,
+      };
     }
   } catch (error) {
     return {
@@ -75,6 +77,21 @@ const acceptMatch = async (api) => {
     console.log("Accepted");
   } catch (error) {
     console.error("Error accepting match:", error.message);
+  }
+};
+
+const getPlayerInfo = async (api) => {
+  try {
+    const response = await api.get("/lol-summoner/v1/current-summoner");
+    return {
+      id: response.data.summonerId,
+      name: response.data.displayName,
+      level: response.data.summonerLevel,
+      profileIconId: response.data.profileIconId,
+    };
+  } catch (error) {
+    console.error("Error fetching player info:", error.message);
+    return null;
   }
 };
 
@@ -104,4 +121,5 @@ module.exports = {
   createLolClient,
   handleAccept,
   checkPlayerPhase,
+  getPlayerInfo,
 };

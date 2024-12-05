@@ -1,83 +1,11 @@
 const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
-const express = require("express");
 const path = require("path");
 
-const {
-  getLockFileInfo,
-  createLolClient,
-  handleAccept,
-} = require("./utils/index");
-const searchLockfileInput = require("./components/searchLockfileInput");
+if (process.env.HOT_RELOAD !== "true") {
+  const startServer = require("./server");
 
-const { GamePhase } = require("./constants/index");
-
-const localServer = express();
-
-localServer.use(express.static(path.join(__dirname, "../", "dist")));
-
-localServer.get("/globals.js", (req, res) => {
-  const filePath = path.join(__dirname, 'globals.js');
-  res.type('application/javascript');
-  res.sendFile(filePath);
-});
-
-localServer.get("/events", async (req, res) => {
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
-  res.flushHeaders();
-
-  try {
-    await getLockFileInfo();
-
-    if (!global.port) {
-      searchLockfileInput();
-      return;
-    }
-
-    const api = createLolClient();
-
-    const intervalId = setInterval(async () => {
-      try {
-        const response = await handleAccept(api);
-        if (response.phase == GamePhase.READYCHECK) {
-          handleAccept(api);
-          res.write(
-            `data: ${JSON.stringify({
-              message: response.phase,
-            })}\n\n`
-          );
-        } else
-          res.write(
-            `data: ${JSON.stringify({
-              message: response.phase,
-            })}\n\n`
-          );
-      } catch (error) {
-        console.error("Error during handleAccept:", error.message);
-        clearInterval(intervalId);
-        res.end();
-      }
-    }, 2000);
-
-    req.on("close", () => {
-      clearInterval(intervalId);
-      res.end();
-    });
-  } catch (error) {
-    console.error("Error initializing events:", error.message);
-    res.status(500).send("Error initializing SSE");
-  }
-});
-
-localServer.get("/home", (req, res) => {
-  const filePath = path.join(__dirname, "index.html");
-  res.sendFile(filePath);
-});
-
-localServer.listen(3000, () => {
-  console.log("Local server is running on http://localhost:3000");
-});
+  startServer();
+}
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -96,7 +24,7 @@ const createWindow = () => {
   }
   win.setMenuBarVisibility(false);
   // win.webContents.openDevTools()
-  win.loadURL("http://localhost:3000/home");
+  win.loadURL(`http://localhost:${global.port}/home`);
 
   win.on('maximize', () => {
     mainWindow.unmaximize();
