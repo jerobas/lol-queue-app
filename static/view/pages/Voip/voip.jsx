@@ -66,8 +66,8 @@ const Voip = ({ eventSource }) => {
         JSON.parse(event.data).phase &&
         JSON.parse(event.data).phase == "WaitingForStats"
       ) {
-        leaveRoom();
         setLoading(true);
+        leaveRoom();
       }
     };
   }, [eventSource]);

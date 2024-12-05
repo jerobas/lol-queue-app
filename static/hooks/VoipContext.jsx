@@ -130,7 +130,7 @@ export const VoipProvider = ({ children }) => {
     setAudioStreams({});
     setMuteStates({});
     setUsers([]);
-    setJoinedRoom(true);
+    setJoinedRoom(false);
 
     if (peerInstanceRef.current) {
       peerInstanceRef.current.disconnect();
