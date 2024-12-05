@@ -9,6 +9,7 @@ import React, {
 import io from "socket.io-client";
 import Peer from "peerjs";
 import { useToast } from "./ToastContext";
+import { useGame } from "./GameContext";
 
 const VoipContext = createContext();
 
@@ -26,6 +27,7 @@ export const VoipProvider = ({ children }) => {
   const peerInstanceRef = useRef(null);
   const socketRef = useRef(null);
   const notify = useToast();
+  const { teams } = useGame();
 
   useEffect(() => {
     const socket = io(
@@ -67,8 +69,18 @@ export const VoipProvider = ({ children }) => {
   useEffect(() => {
     if (peerId && joinedRoom) {
       socketRef.current.on("userJoined", (players) => {
-        setUsers(players);
-        connectToUsers(players);
+        const updatedPlayers = players.map((player) => {
+          const matchingPlayer = [...teams.teamOne, ...teams.teamTwo].find(
+            (teamPlayer) => teamPlayer.summonerInternalName === player.name
+          );
+
+          return {
+            ...player,
+            iconUrl: matchingPlayer ? matchingPlayer.iconUrl : null,
+          };
+        });
+        setUsers(updatedPlayers);
+        connectToUsers(updatedPlayers);
       });
     }
   }, [peerId, joinedRoom]);
@@ -98,7 +110,8 @@ export const VoipProvider = ({ children }) => {
   );
 
   const joinRoom = useCallback(() => {
-    if (!roomId || !playerName) return notify.warning("Erro");
+    if (!roomId || !playerName)
+      return notify.warning("Ocorreu um erro ao entrar na call");
 
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       myAudioRef.current = stream;
@@ -106,6 +119,25 @@ export const VoipProvider = ({ children }) => {
       setJoinedRoom(true);
     });
   }, [roomId, playerName, peerId]);
+
+  const leaveRoom = useCallback(() => {
+    socketRef.current.emit("leaveRoom", { roomId, playerName });
+
+    if (myAudioRef.current) {
+      myAudioRef.current.getTracks().forEach((track) => track.stop());
+      myAudioRef.current = null;
+    }
+    setAudioStreams({});
+    setMuteStates({});
+    setUsers([]);
+    setJoinedRoom(true);
+
+    if (peerInstanceRef.current) {
+      peerInstanceRef.current.disconnect();
+    }
+
+    notify.success("O jogo terminou, vaza!");
+  }, [roomId, playerName]);
 
   const addAudioStream = useCallback((name, stream) => {
     if (name) setAudioStreams((prev) => ({ ...prev, [name]: stream }));
@@ -164,7 +196,8 @@ export const VoipProvider = ({ children }) => {
         audioStreams,
         muteStates,
         toggleMute,
-        myAudioRef
+        myAudioRef,
+        leaveRoom,
       }}
     >
       {children}

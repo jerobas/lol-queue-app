@@ -4,9 +4,9 @@ import Home from "./pages/Home";
 import Settings from "./pages/Settings";
 import sse from "../utils/sse";
 import Voip from "./pages/Voip/voip";
-import { VoipProvider } from "../../src/hooks/VoipContext";
-import { ToastProvider } from "../../src/hooks/ToastContext";
-import { GameProvider } from "../../src/hooks/GameContext";
+import { VoipProvider } from "../hooks/VoipContext";
+import { ToastProvider } from "../hooks/ToastContext";
+import { GameProvider } from "../hooks/GameContext";
 
 const PAGES = {
   home: { component: Home, icon: "fa-solid fa-home", name: "home" },

@@ -45,7 +45,8 @@ const checkPlayerPhase = async (api) => {
       response.message === GamePhase.NOTOK || // when in the menu
       response.data.phase === GamePhase.LOBBY || // when in the lobby without searching
       response.data.phase === GamePhase.MATCHMAKING || // searching for a match
-      response.data.phase === GamePhase.READYCHECK // ready to accept
+      response.data.phase === GamePhase.READYCHECK || // ready to accept
+      response.data.phase === GamePhase.POSTGAME // acabou partida
     ) {
       // Player is not in a match.
       return {
@@ -54,7 +55,11 @@ const checkPlayerPhase = async (api) => {
       };
     } else {
       // Player is in a match
-      return { status: true, phase: GamePhase.INGAME, gameData: response.data.gameData };
+      return {
+        status: true,
+        phase: GamePhase.INGAME,
+        gameData: response.data.gameData,
+      };
     }
   } catch (error) {
     return {
@@ -114,5 +119,5 @@ module.exports = {
   createLolClient,
   handleAccept,
   checkPlayerPhase,
-  getPlayerInfo
+  getPlayerInfo,
 };

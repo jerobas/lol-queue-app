@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useVoip } from "../../../../src/hooks/VoipContext";
-import { useGame } from "../../../../src/hooks/GameContext";
-import useChampion from "../../../../src/hooks/useChampion";
+import { useVoip } from "../../../hooks/VoipContext";
+import { useGame } from "../../../hooks/GameContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMicrophone,
@@ -19,11 +18,12 @@ const Voip = ({ eventSource }) => {
     muteStates,
     toggleMute,
     myAudioRef,
+    leaveRoom,
   } = useVoip();
 
   const [loading_, setLoading] = useState(true);
-
-  const { setTeams } = useGame();
+  const { setTeams, teams } = useGame();
+  const [iconsLoaded, setIconsLoaded] = useState(false);
 
   useEffect(() => {
     eventSource.onmessage = (event) => {
@@ -62,9 +62,67 @@ const Voip = ({ eventSource }) => {
         setTeams({ teamOne: t1, teamTwo: t2 });
         setPlayerName(JSON.parse(event.data).localPlayer.name);
         setLoading(false);
+      } else if (
+        JSON.parse(event.data).phase &&
+        JSON.parse(event.data).phase == "WaitingForStats"
+      ) {
+        leaveRoom();
+        setLoading(true);
       }
     };
   }, [eventSource]);
+
+  useEffect(() => {
+    if (teams && !iconsLoaded) {
+      const updateTeamsWithIcons = async () => {
+        try {
+          const updatedTeams = { teamOne: [], teamTwo: [] };
+
+          const findById = async (championId) => {
+            const versionUrl =
+              "https://ddragon.leagueoflegends.com/api/versions.json";
+            const championsUrl =
+              "https://ddragon.leagueoflegends.com/cdn/<VERSION>/data/en_US/champion.json";
+
+            const versions = await fetch(versionUrl).then((res) => res.json());
+            const latestVersion = versions[0];
+
+            const champions = await fetch(
+              championsUrl.replace("<VERSION>", latestVersion)
+            ).then((res) => res.json());
+
+            const champion = Object.values(champions.data).find(
+              (champ) => champ.key === String(championId)
+            );
+
+            if (!champion) {
+              console.error(`Champion with ID ${championId} not found`);
+              return null;
+            }
+
+            return `https://ddragon.leagueoflegends.com/cdn/${latestVersion}/img/champion/${champion.id}.png`;
+          };
+
+          for (const player of teams.teamOne) {
+            const iconUrl = await findById(player.championId);
+            updatedTeams.teamOne.push({ ...player, iconUrl });
+          }
+
+          for (const player of teams.teamTwo) {
+            const iconUrl = await findById(player.championId);
+            updatedTeams.teamTwo.push({ ...player, iconUrl });
+          }
+
+          setTeams(updatedTeams);
+          setIconsLoaded(true);
+        } catch (err) {
+          console.error("Error updating team icons: ", err);
+        }
+      };
+
+      updateTeamsWithIcons();
+    }
+  }, [teams, iconsLoaded, setTeams]);
 
   return (
     <div
@@ -118,7 +176,21 @@ const Voip = ({ eventSource }) => {
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                 }}
               >
-                {user.name}
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  {user?.iconUrl && (
+                    <img
+                      src={user?.iconUrl}
+                      alt={`${user.name} icon`}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                        marginRight: "10px",
+                      }}
+                    />
+                  )}
+                  {user.name}
+                </div>
                 <button
                   onClick={() => toggleMute(user.name)}
                   style={{

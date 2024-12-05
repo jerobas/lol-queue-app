@@ -22,6 +22,7 @@ const GamePhase = deepFreeze({
   NOTOK: "No gameflow session exists.",
   MENU: "Menu",
   INPROGRESS: "InProgress",
+  POSTGAME: "WaitingForStats"
 });
 
 const packageJson = require(path.join(__dirname, "..", "..", "package.json"));

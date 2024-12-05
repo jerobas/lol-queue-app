@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import useChampion from "./useChampion";
+import React, { createContext, useContext, useState } from "react";
 
 const GameContext = createContext();
 
