@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CommonTemplate from "./templates/Common";
+import CommonTemplate from "./templates/common/index";
 import Home from "./pages/Home";
 import Settings from "./pages/Settings";
 import sse from "../utils/sse";
@@ -17,7 +17,6 @@ const PAGES = {
 const App = () => {
   const [currentPage, setCurrentPage] = useState("home");
   const eventSource = sse();
-
   const renderPage = (page) => {
     const PageComponent = PAGES[page]?.component || Home;
     return <PageComponent eventSource={eventSource} />;
@@ -28,7 +27,7 @@ const App = () => {
       eventSource.close();
     };
   }, [eventSource]);
-
+  
   return (
     <ToastProvider>
       <GameProvider>

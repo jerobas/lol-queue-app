@@ -23,11 +23,12 @@ const createWindow = () => {
     win.webContents.openDevTools();
   }
   win.setMenuBarVisibility(false);
-  // win.webContents.openDevTools()
+  // win.webContents.openDevTools();
   win.loadURL(`http://localhost:${global.port}/home`);
 
-  win.on('maximize', () => {
-    mainWindow.unmaximize();
+  win.on("maximize", (event) => {
+    event.preventDefault();
+    win.unmaximize();
   });
 
   win.webContents.on("before-input-event", (event, input) => {
@@ -47,9 +48,9 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow();
 
-  globalShortcut.register("Ctrl+Shift+I", () => { });
-  globalShortcut.register("CmdOrCtrl+Shift+I", () => { });
-  globalShortcut.register("F12", () => { });
+  globalShortcut.register("Ctrl+Shift+I", () => {});
+  globalShortcut.register("CmdOrCtrl+Shift+I", () => {});
+  globalShortcut.register("F12", () => {});
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

@@ -22,9 +22,8 @@ const Voip = ({ eventSource }) => {
   } = useVoip();
 
   const [loading_, setLoading] = useState(true);
-  const { setTeams, teams } = useGame();
-  const [iconsLoaded, setIconsLoaded] = useState(false);
-
+  const { setTeams, teams, iconsLoaded, setIconsLoaded } = useGame();
+  
   useEffect(() => {
     eventSource.onmessage = (event) => {
       if (
@@ -128,6 +127,7 @@ const Voip = ({ eventSource }) => {
   return (
     <div
       style={{
+        marginLeft: "10px",
         padding: "20px",
         textAlign: "center",
         WebkitAppRegion: "no-drag",

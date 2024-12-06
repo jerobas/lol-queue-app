@@ -63,7 +63,6 @@ const startServer = () => {
             state.phase === GamePhase.POSTGAME ||
             state.phase === GamePhase.RECONNECT
           ) {
-            console.log("aki");
             res.write(
               `data: ${JSON.stringify({
                 phase: state.phase,
