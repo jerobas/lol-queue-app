@@ -1,5 +1,7 @@
 import { ToastOptions } from "react-toastify";
 
+const BASE_URL = "ec2-15-229-78-33.sa-east-1.compute.amazonaws.com";
+
 export interface ISession {
   gameData: {
     gameId: number;
@@ -47,7 +49,14 @@ export enum Images {
   LOBBY = "src/assets/lobby.png",
   INGAME = "src/assets/in-game.png",
   MENU = "src/assets/menu.png",
-  QUEUE = "src/assets/queue.png"
+  QUEUE = "src/assets/queue.png",
+}
+
+export enum AWS {
+  SOCKET = `http://${BASE_URL}:3001`,
+  PEER = BASE_URL,
+  PERR_PORT = 3002,
+  PATH = "peerjs",
 }
 
 export enum IpcMethod {
