@@ -8,23 +8,19 @@ const Sidebar = ({ children, routes }: { children: React.ReactNode, routes: Page
   const [isOpen, _] = sidebarState;
 
   return (
-    <div className="flex h-screen">
+    <div className="flex grow relative">
       <div
-        className={`bg-gray-800 text-white p-4 transition-all duration-300 ${isOpen ? "w-20" : "w-16"
-          }`}
+        className={`text-white p-4 transition-all duration-300 absolute z-10 h-min`}
       >
         <BurgerButton sidebarState={sidebarState} />
-        {isOpen && (
-          <nav>
-            <ul className="space-y-2 mt-4">
-              {Object.entries(routes).map(([key, route]) => (
-                <PageButton key={key} route={route} name={key} />
-              ))}
-            </ul>
-          </nav>
-        )}
       </div>
-
+      <div className={"p-4 pt-[47px] transform transition-transform duration-300 absolute bg-amber-950 h-full" + (isOpen ? "" : " -translate-x-full")}>
+        <ul className="space-y-2">
+          {Object.entries(routes).map(([key, route]) => (
+            <PageButton key={key} route={route} name={key} />
+          ))}
+        </ul>
+      </div>
       <main className="flex-1 p-6 overflow-y-auto bg-gray-100">{children}</main>
     </div>
   );

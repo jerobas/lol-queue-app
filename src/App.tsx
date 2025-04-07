@@ -3,10 +3,12 @@ import Sidebar from "./components/sidebar";
 import { ToastProvider } from "./context/toastContext";
 import { routes } from "./pages";
 import { Suspense } from "react";
+import TitleBar from "./components/titlebar";
 
 function App() {
   return (
     <ToastProvider>
+      <TitleBar />
       <Sidebar routes={routes}>
         <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
           <Routes>
