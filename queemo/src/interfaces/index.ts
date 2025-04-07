@@ -62,6 +62,8 @@ export enum AWS {
 export enum IpcMethod {
   GET = "lol-api:get",
   POST = "lol-api:post",
+  MINIMIZE = "window:minimize",
+  CLOSE = "window:close"
 }
 
 export interface ToastNotify

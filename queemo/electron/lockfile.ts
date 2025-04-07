@@ -1,21 +1,36 @@
-import fs from 'fs'
-import path from 'path'
+import fs from "fs";
+import path from "path";
+import { execSync } from "child_process";
 
 export const getLockFile = () => {
-    const filePath = path.join('D:\\Riot Games\\League of Legends\\lockfile')
+  const possibleDrives = execSync("wmic logicaldisk get name")
+    .toString()
+    .split("\n")
+    .slice(1)
+    .map((line) => line.trim())
+    .filter(Boolean);
 
-    if (!fs.existsSync(filePath)) {
-        throw new Error('F lockfile')
-    }
+  for (const drive of possibleDrives) {
+    const filePath = path.join(
+      drive,
+      "Riot Games",
+      "League of Legends",
+      "lockfile"
+    );
 
-    const content = fs.readFileSync(filePath, 'utf-8')
-    const [name, pid, port, password, protocol] = content.split(':');
+    if (fs.existsSync(filePath)) {
+      const content = fs.readFileSync(filePath, "utf-8");
+      const [name, pid, port, password, protocol] = content.split(":");
 
-    return {
+      return {
         name,
         pid: Number(pid),
         port: Number(port),
         password,
-        protocol
+        protocol,
+      };
     }
-}
+  }
+
+  throw new Error("Lockfile not found on any disk.");
+};
