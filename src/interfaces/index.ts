@@ -46,10 +46,10 @@ export enum Routes {
 }
 
 export enum Images {
-  LOBBY = "src/assets/lobby.png",
-  INGAME = "src/assets/in-game.png",
-  MENU = "src/assets/menu.png",
-  QUEUE = "src/assets/queue.png",
+  LOBBY = "/images/lobby.png",
+  INGAME = "/images/in-game.png",
+  MENU = "/images/menu.png",
+  QUEUE = "/images/queue.png",
 }
 
 export enum AWS {
