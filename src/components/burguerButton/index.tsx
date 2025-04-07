@@ -15,7 +15,6 @@ const BurgerButton = ({ sidebarState }: BurgerButtonProps) => {
         <div
             id="burger-button"
             className={`z-20 ${isOpen ? "open" : ""}`}
-            //style={{ WebkitAppRegion: "no-drag" }}
             onClick={toggleOpen}
         >
             <span></span>

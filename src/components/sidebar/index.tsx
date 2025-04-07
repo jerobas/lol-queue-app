@@ -14,7 +14,7 @@ const Sidebar = ({ children, routes }: { children: React.ReactNode, routes: Page
       >
         <BurgerButton sidebarState={sidebarState} />
       </div>
-      <div className={"p-4 pt-[47px] transform transition-transform duration-300 absolute bg-amber-950 h-full" + (isOpen ? "" : " -translate-x-full")}>
+      <div className={"p-4 pt-[47px] transform transition-transform duration-300 absolute h-full" + (isOpen ? "" : " -translate-x-full")}>
         <ul className="space-y-2">
           {Object.entries(routes).map(([key, route]) => (
             <PageButton key={key} route={route} name={key} />

@@ -13,7 +13,6 @@ const TeemoImage = ({ data }: TeemoImageProps) => {
         else if (phase === GamePhase.MATCHMAKING) return Images!.QUEUE;
     };
     const imageSrc = data ? getPhaseImage(data!.phase) : Images!.MENU;
-    console.log(imageSrc)
 
     return <img src={imageSrc} />
 };
