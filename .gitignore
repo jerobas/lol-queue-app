@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+queemo/dist-electron
 
 # Editor directories and files
 .vscode/*

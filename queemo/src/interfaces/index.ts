@@ -62,10 +62,20 @@ export enum AWS {
 export enum IpcMethod {
   GET = "lol-api:get",
   POST = "lol-api:post",
+  MINIMIZE = "window:minimize",
+  CLOSE = "window:close"
 }
 
 export interface ToastNotify
   extends Record<
     "success" | "error" | "info" | "warning" | "custom",
     (message: string, options?: ToastOptions) => void
-  > {}
+  > { }
+
+export interface Page {
+  [key: string]: React.ReactElement;
+}
+
+export interface Pages {
+  [key: string]: Page;
+}

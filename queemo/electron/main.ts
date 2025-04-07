@@ -25,7 +25,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 386,
     height: 678,
-    // frame: false,
+    frame: false,
     resizable: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
@@ -75,4 +75,12 @@ ipcMain.handle(IpcMethod.POST, async (_event, endpoint: string, data?: any) => {
   } catch (e) {
     return { error: (e as Error).message };
   }
+});
+
+ipcMain.handle(IpcMethod.MINIMIZE, () => {
+  win?.minimize();
+});
+
+ipcMain.handle(IpcMethod.CLOSE, () => {
+  win?.close();
 });

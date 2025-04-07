@@ -1,0 +1,248 @@
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from "react";
+import io, { Socket } from "socket.io-client";
+import Peer, { MediaConnection } from "peerjs";
+import { useToast } from "./toastContext";
+import { useGame } from "./gameContext";
+
+interface VoipContextType {
+  roomId: string;
+  playerName: string;
+  setRoomId: (id: string) => void;
+  setPlayerName: (name: string) => void;
+  joinedRoom: boolean;
+  joinRoom: () => void;
+  leaveRoom: () => void;
+  users: Player[];
+  audioStreams?: Record<string, MediaStream>;
+  muteStates: Record<string, boolean>;
+  toggleMute: (targetPlayerName: string) => void;
+  myAudioRef: React.MutableRefObject<MediaStream | null>;
+}
+
+interface VoipProviderProps {
+  children: ReactNode;
+}
+
+interface Player {
+  name: string;
+  peerId: string;
+  iconUrl?: string | null;
+}
+
+const VoipContext = createContext<VoipContextType>({} as VoipContextType);
+
+export const useVoip = () => useContext(VoipContext);
+
+export const VoipProvider = ({ children }: VoipProviderProps) => {
+  const [roomId, setRoomId] = useState<string>("");
+  const [playerName, setPlayerName] = useState<string>("");
+  const [joinedRoom, setJoinedRoom] = useState<boolean>(false);
+  const [users, setUsers] = useState<Player[]>([]);
+  const [audioStreams, setAudioStreams] =
+    useState<Record<string, MediaStream>>();
+  const [muteStates, setMuteStates] = useState<Record<string, boolean>>({});
+  const [peerId, setPeerId] = useState<string | null>(null);
+
+  const myAudioRef = useRef<MediaStream | null>(null);
+  const peerInstanceRef = useRef<Peer | null>(null);
+  const socketRef = useRef<Socket | null>(null);
+
+  const notify = useToast();
+  const { teams } = useGame();
+
+  useEffect(() => {
+    const socket = io(
+      "http://ec2-15-229-78-33.sa-east-1.compute.amazonaws.com:3001",
+      {
+        autoConnect: false,
+      }
+    );
+
+    const peer = new Peer(undefined, {
+      host: "ec2-15-229-78-33.sa-east-1.compute.amazonaws.com",
+      port: 3002,
+      path: "peerjs",
+    });
+
+    socket.connect();
+    socketRef.current = socket;
+    peerInstanceRef.current = peer;
+
+    peer.on("open", (id: string) => {
+      setPeerId(id);
+    });
+
+    peer.on("call", (call: MediaConnection) => {
+      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        call.answer(stream);
+        call.on("stream", (userStream: MediaStream) => {
+          addAudioStream(call.metadata.playerName, userStream);
+        });
+      });
+    });
+
+    return () => {
+      peer.disconnect();
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (peerId && joinedRoom) {
+      socketRef.current?.on("userJoined", (players: Player[]) => {
+        const updatedPlayers = players.map((player) => {
+          const matchingPlayer = [...teams.teamOne, ...teams.teamTwo].find(
+            (teamPlayer) => teamPlayer.summonerInternalName === player.name
+          );
+
+          return {
+            ...player,
+            iconUrl: matchingPlayer ? matchingPlayer.iconUrl : null,
+          };
+        });
+        setUsers(updatedPlayers);
+        connectToUsers(updatedPlayers);
+      });
+    }
+  }, [peerId, joinedRoom]);
+
+  const connectToUsers = useCallback(
+    (players: Player[]) => {
+      for (const player of players) {
+        if (player.peerId !== peerId) {
+          const call = peerInstanceRef.current?.call(
+            player.peerId,
+            myAudioRef.current!,
+            {
+              metadata: { playerName },
+            }
+          );
+          call?.on("stream", (userStream: MediaStream) => {
+            addAudioStream(player.name, userStream);
+          });
+
+          call?.on("close", () => {
+            removeAudioStream(player.name);
+          });
+        }
+      }
+    },
+    [peerId, playerName]
+  );
+
+  const joinRoom = useCallback(() => {
+    if (!roomId || !playerName)
+      return notify.warning("Ocorreu um erro ao entrar na call");
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      myAudioRef.current = stream;
+      socketRef.current?.emit("joinRoom", { roomId, playerName, peerId });
+      setJoinedRoom(true);
+    });
+  }, [roomId, playerName, peerId]);
+
+  const leaveRoom = useCallback(() => {
+    socketRef.current?.emit("leaveRoom", { roomId, playerName });
+
+    if (myAudioRef.current) {
+      myAudioRef.current.getTracks().forEach((track) => track.stop());
+      myAudioRef.current = null;
+    }
+
+    if (peerInstanceRef.current) {
+      Object.values(peerInstanceRef.current.connections).forEach(
+        (connectionArray) => {
+          connectionArray.forEach((connection: any) => {
+            if (connection.close) connection.close();
+          });
+        }
+      );
+      peerInstanceRef.current.disconnect();
+    }
+
+    setAudioStreams(undefined);
+    setMuteStates({});
+    setUsers([]);
+    setJoinedRoom(false);
+
+    notify.success("O jogo terminou, vaza!");
+  }, [roomId, playerName]);
+
+  const addAudioStream = useCallback((name: string, stream: MediaStream) => {
+    if (name)
+      setAudioStreams((prev) => ({
+        ...prev,
+        [name]: stream,
+      }));
+  }, []);
+
+  const removeAudioStream = useCallback((name: string) => {
+    setAudioStreams((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev };
+      delete updated[name];
+      return updated;
+    });
+  }, []);
+
+  const toggleMute = useCallback(
+    (targetPlayerName: string) => {
+      if (targetPlayerName === playerName) {
+        const isMuted = !myAudioRef.current?.getAudioTracks()[0].enabled;
+        myAudioRef.current?.getAudioTracks().forEach((track) => {
+          track.enabled = isMuted!;
+        });
+        setMuteStates((prev) => ({
+          ...prev,
+          [playerName]: !isMuted!,
+        }));
+      } else {
+        const stream = audioStreams?.[targetPlayerName];
+        if (stream instanceof MediaStream) {
+          const audioElement = Array.from(
+            document.querySelectorAll("audio")
+          ).find((audio) => audio.srcObject === stream);
+
+          if (audioElement) {
+            const isMuted = !audioElement.muted;
+            audioElement.muted = isMuted;
+            setMuteStates((prev) => ({
+              ...prev,
+              [targetPlayerName]: isMuted,
+            }));
+          }
+        }
+      }
+    },
+    [audioStreams, playerName]
+  );
+
+  return (
+    <VoipContext.Provider
+      value={{
+        roomId,
+        playerName,
+        setRoomId,
+        setPlayerName,
+        joinedRoom,
+        joinRoom,
+        leaveRoom,
+        users,
+        audioStreams,
+        muteStates,
+        toggleMute,
+        myAudioRef,
+      }}
+    >
+      {children}
+    </VoipContext.Provider>
+  );
+};
