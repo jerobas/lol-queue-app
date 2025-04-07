@@ -68,4 +68,12 @@ export interface ToastNotify
   extends Record<
     "success" | "error" | "info" | "warning" | "custom",
     (message: string, options?: ToastOptions) => void
-  > {}
+  > { }
+
+export interface Page {
+  [key: string]: React.ReactElement;
+}
+
+export interface Pages {
+  [key: string]: Page;
+}

@@ -1,0 +1,144 @@
+@import "./la-ball-clip-rotate.scss";
+@import "../../styles/variables.scss";
+
+/* SCSS HEX */
+
+.spinner-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+}
+
+path {
+    animation-duration: $animation-period;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+#light-green {
+    animation-name: light-green;
+}
+
+#dark-green {
+    animation-name: dark-green;
+}
+
+#light-purple {
+    animation-name: light-purple;
+}
+
+#green {
+    animation-name: green;
+
+}
+
+#light-beige {
+    animation-name: light-beige;
+}
+
+#dark-beige {
+    animation-name: dark-beige;
+}
+
+#dark-purple {
+    animation-name: dark-purple;
+}
+
+@keyframes light-green {
+    0% {
+        fill: $light-green;
+    }
+
+    50% {
+        fill: #999;
+    }
+
+    100% {
+        fill: $light-green;
+    }
+}
+
+@keyframes light-purple {
+    0% {
+        fill: $light-purple;
+    }
+
+    50% {
+        fill: #b3b3b3;
+    }
+
+    100% {
+        fill: $light-purple;
+    }
+}
+
+@keyframes light-beige {
+    0% {
+        fill: $light-beige;
+    }
+
+    50% {
+        fill: #ccc;
+    }
+
+    100% {
+        fill: $light-beige;
+    }
+}
+
+@keyframes dark-purple {
+    0% {
+        fill: $dark-purple;
+    }
+
+    50% {
+        fill: #666;
+    }
+
+    100% {
+        fill: $dark-purple;
+    }
+}
+
+@keyframes green {
+    0% {
+        fill: $green;
+    }
+
+    50% {
+        fill: #4c4c4c;
+    }
+
+    100% {
+        fill: $green;
+    }
+}
+
+@keyframes dark-green {
+    0% {
+        fill: $dark-green;
+    }
+
+    50% {
+        fill: #333;
+    }
+
+    100% {
+        fill: $dark-green;
+    }
+}
+
+@keyframes dark-beige {
+    0% {
+        fill: $dark-beige;
+    }
+
+    50% {
+        fill: #666;
+    }
+
+    100% {
+        fill: $dark-beige;
+    }
+}

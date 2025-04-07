@@ -1,17 +1,20 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/home";
 import Sidebar from "./components/sidebar";
 import { ToastProvider } from "./context/toastContext";
-import Voip from "./pages/voip";
+import { routes } from "./pages";
+import { Suspense } from "react";
 
 function App() {
   return (
     <ToastProvider>
-      <Sidebar>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/voip" element={<Voip />} />
-        </Routes>
+      <Sidebar routes={routes}>
+        <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
+          <Routes>
+            {Object.entries(routes).map(([name, route]) => (
+              <Route key={name} path={name === 'home' ? '/' : `/${name}`} element={route["index"]} />
+            ))}
+          </Routes>
+        </Suspense>
       </Sidebar>
     </ToastProvider>
   );

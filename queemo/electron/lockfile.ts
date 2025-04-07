@@ -2,9 +2,9 @@ import fs from 'fs'
 import path from 'path'
 
 export const getLockFile = () => {
-    const filePath = path.join('C:\\Riot Games\\League of Legends\\lockfile')
-    
-    if(!fs.existsSync(filePath)){
+    const filePath = path.join('D:\\Riot Games\\League of Legends\\lockfile')
+
+    if (!fs.existsSync(filePath)) {
         throw new Error('F lockfile')
     }
 
