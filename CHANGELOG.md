@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.5 (2025-04-08)
+
+
+### Bug Fixes
+
+* identação ([7fbf413](https://github.com/jerobas/queemo/commit/7fbf4135c65e385ce02473f00c607dd50a002380))
+
 ### 1.0.4 (2025-04-08)
 
 ### 1.0.3 (2025-04-08)
