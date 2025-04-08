@@ -1,23 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
-interface TeamPlayer {
-  summonerInternalName: string;
-  iconUrl: string;
-  [key: string]: any;
-}
-
-interface Teams {
-  teamOne: TeamPlayer[];
-  teamTwo: TeamPlayer[];
-}
-
-interface GameContextType {
-  teams?: Teams;
-  setTeams: React.Dispatch<React.SetStateAction<Teams | undefined>>;
-}
-
-interface GameProviderProps {
-  children: ReactNode;
-}
+import { createContext, useContext, useState } from "react";
+import { GameContextType, Teams, GameProviderProps } from "../interfaces";
 
 const GameContext = createContext<GameContextType>({} as GameContextType);
 

@@ -13,46 +13,18 @@ import io, { Socket } from "socket.io-client";
 import Peer, { MediaConnection } from "peerjs";
 import { useToast } from "./toastContext";
 import { useGame } from "./gameContext";
-import { AWS } from "../interfaces";
-
-interface VoipContextType {
-  roomId: string;
-  playerName: string;
-  summonerId: string;
-  setRoomId: (id: string) => void;
-  setPlayerName: (name: string) => void;
-  setSummonerId: (name: string) => void;
-  joinedRoom: boolean;
-  joinRoom: () => void;
-  leaveRoom: () => void;
-  users: Player[];
-  audioStreams?: Record<string, MediaStream>;
-  muteStates: Record<string, boolean>;
-  toggleMute: (targetPlayerName: string) => void;
-  myAudioRef: React.MutableRefObject<MediaStream | null>;
-}
-
-interface VoipProviderProps {
-  children: ReactNode;
-}
-
-interface Player {
-  name: string;
-  peerId: string;
-  summonerId?: string;
-  iconUrl?: string | null;
-}
+import { AWS, IPlayer, VoipContextType } from "../interfaces";
 
 const VoipContext = createContext<VoipContextType>({} as VoipContextType);
 
 export const useVoip = () => useContext(VoipContext);
 
-export const VoipProvider = ({ children }: VoipProviderProps) => {
+export const VoipProvider = ({ children }: ReactNode) => {
   const [roomId, setRoomId] = useState<string>("");
   const [playerName, setPlayerName] = useState<string>("");
   const [summonerId, setSummonerId] = useState<string>("");
   const [joinedRoom, setJoinedRoom] = useState<boolean>(false);
-  const [users, setUsers] = useState<Player[]>([]);
+  const [users, setUsers] = useState<IPlayer[]>([]);
   const [audioStreams, setAudioStreams] =
     useState<Record<string, MediaStream>>();
   const [muteStates, setMuteStates] = useState<Record<string, boolean>>({});
@@ -101,7 +73,7 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
 
   useEffect(() => {
     if (peerId && joinedRoom) {
-      socketRef.current?.on("userJoined", (players: Player[]) => {
+      socketRef.current?.on("userJoined", (players: IPlayer[]) => {
         const updatedPlayers = players.map((player) => {
           const matchingPlayer = [...teams.teamOne, ...teams.teamTwo].find(
             (teamPlayer) => teamPlayer.summonerId === player.summonerId
@@ -119,7 +91,7 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
   }, [peerId, joinedRoom, teams]);
 
   const connectToUsers = useCallback(
-    (players: Player[]) => {
+    (players: IPlayer[]) => {
       for (const player of players) {
         if (player.peerId !== peerId) {
           const call = peerInstanceRef.current?.call(
