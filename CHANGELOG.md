@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.2.1 (2025-04-08)
+
+
+### Bug Fixes
+
+* remove player when close app ([eb1c036](https://github.com/jerobas/queemo/commit/eb1c0368490a2e5315f0f41b2422484056171ddb))
+
 ## 1.2.0 (2025-04-08)
 
 
