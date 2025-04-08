@@ -1,12 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
-import { useToast } from "./toastContext";
-
+import React, { createContext, useContext, useState, ReactNode } from "react";
 interface TeamPlayer {
   summonerInternalName: string;
   iconUrl: string;
@@ -21,8 +13,6 @@ interface Teams {
 interface GameContextType {
   teams?: Teams;
   setTeams: React.Dispatch<React.SetStateAction<Teams | undefined>>;
-  iconsLoaded: boolean;
-  setIconsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface GameProviderProps {
@@ -35,19 +25,9 @@ export const useGame = () => useContext(GameContext);
 
 export const GameProvider = ({ children }: GameProviderProps) => {
   const [teams, setTeams] = useState<Teams>();
-  const [iconsLoaded, setIconsLoaded] = useState<boolean>(false);
-  const notify = useToast();
-
-  useEffect(() => {
-    if (iconsLoaded) {
-      notify.success("Você já pode entrar na call!");
-    }
-  }, [iconsLoaded]);
 
   return (
-    <GameContext.Provider
-      value={{ teams, setTeams, iconsLoaded, setIconsLoaded }}
-    >
+    <GameContext.Provider value={{ teams, setTeams }}>
       {children}
     </GameContext.Provider>
   );
