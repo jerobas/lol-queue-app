@@ -119,3 +119,7 @@ export interface Page {
 export interface Pages {
   [key: string]: Page;
 }
+
+export interface VoipProviderProps {
+  children: ReactNode;
+}

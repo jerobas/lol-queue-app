@@ -16,7 +16,7 @@ export const findChampionIcon = async (
     championsUrl.replace("<VERSION>", latestVersion)
   ).then((res) => res.json());
 
-  const champion = Object.values(champions.data).find(
+  const champion: any = Object.values(champions.data).find(
     (champ: any) => champ.key === String(championId)
   );
 

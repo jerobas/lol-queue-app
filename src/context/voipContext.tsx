@@ -13,13 +13,18 @@ import io, { Socket } from "socket.io-client";
 import Peer, { MediaConnection } from "peerjs";
 import { useToast } from "./toastContext";
 import { useGame } from "./gameContext";
-import { AWS, IPlayer, VoipContextType } from "../interfaces";
+import {
+  AWS,
+  IPlayer,
+  VoipContextType,
+  VoipProviderProps,
+} from "../interfaces";
 
 const VoipContext = createContext<VoipContextType>({} as VoipContextType);
 
 export const useVoip = () => useContext(VoipContext);
 
-export const VoipProvider = ({ children }: ReactNode) => {
+export const VoipProvider = ({ children }: VoipProviderProps) => {
   const [roomId, setRoomId] = useState<string>("");
   const [playerName, setPlayerName] = useState<string>("");
   const [summonerId, setSummonerId] = useState<string>("");

@@ -37,14 +37,14 @@ const useSession = (intervalMS = 2500) => {
       lastPhase.current = result.phase;
 
       await Promise.all(
-        result.gameData.teamOne.map(async (player) => {
+        result.gameData.teamOne.map(async (player: any) => {
           const iconUrl = await findChampionIcon(player.championId);
           player.championIcon = iconUrl;
         })
       );
 
       await Promise.all(
-        result.gameData.teamTwo.map(async (player) => {
+        result.gameData.teamTwo.map(async (player : any) => {
           const iconUrl = await findChampionIcon(player.championId);
           player.championIcon = iconUrl;
         })
