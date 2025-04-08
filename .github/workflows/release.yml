@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      
+
 permissions:
   contents: write
 
@@ -43,3 +43,10 @@ jobs:
           git push --follow-tags origin master
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Create GitHub Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
