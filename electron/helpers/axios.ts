@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import https from "https";
-import { Routes } from "../src/interfaces";
+import { Routes } from "../../src/interfaces";
 
 class ApiService {
   private apiClient: AxiosInstance;

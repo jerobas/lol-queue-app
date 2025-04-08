@@ -46,10 +46,10 @@ export enum Routes {
 }
 
 export enum Images {
-  LOBBY = "/images/lobby.png",
-  INGAME = "/images/in-game.png",
-  MENU = "/images/menu.png",
-  QUEUE = "/images/queue.png",
+  LOBBY = "lobby.png",
+  INGAME = "in-game.png",
+  MENU = "menu.png",
+  QUEUE = "queue.png",
 }
 
 export enum AWS {
@@ -63,14 +63,15 @@ export enum IpcMethod {
   GET = "lol-api:get",
   POST = "lol-api:post",
   MINIMIZE = "window:minimize",
-  CLOSE = "window:close"
+  CLOSE = "window:close",
+  FILE = "file",
 }
 
 export interface ToastNotify
   extends Record<
     "success" | "error" | "info" | "warning" | "custom",
     (message: string, options?: ToastOptions) => void
-  > { }
+  > {}
 
 export interface Page {
   [key: string]: React.ReactElement;

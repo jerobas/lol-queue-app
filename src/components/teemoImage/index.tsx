@@ -1,20 +1,36 @@
-//import Loading from "../Loading";
-import { ISession } from "../../interfaces";
+import { useEffect, useState } from "react";
+import { IpcMethod, ISession } from "../../interfaces";
 import { GamePhase, Images } from "../../interfaces";
+import { ipc } from "../../utils";
 
 interface TeemoImageProps {
-    data: ISession | undefined;
+  data: ISession | undefined;
 }
 
 const TeemoImage = ({ data }: TeemoImageProps) => {
-    const getPhaseImage = (phase: string) => {
-        if (phase === GamePhase.INGAME) return Images!.INGAME;
-        else if (phase === GamePhase.LOBBY) return Images!.LOBBY;
-        else if (phase === GamePhase.MATCHMAKING) return Images!.QUEUE;
-    };
-    const imageSrc = data ? getPhaseImage(data!.phase) : Images!.MENU;
+  const [imageSrc, setImageSrc] = useState<string>("");
 
-    return <img src={imageSrc} />
+  const getPhaseImage = async (phase: string) => {
+    if (phase === GamePhase.INGAME)
+      return await ipc(IpcMethod.FILE, Images!.INGAME);
+    else if (phase === GamePhase.LOBBY)
+      return await ipc(IpcMethod.FILE, Images!.LOBBY);
+    else if (phase === GamePhase.MATCHMAKING)
+      return await ipc(IpcMethod.FILE, Images!.QUEUE);
+    return await ipc(IpcMethod.FILE, Images!.MENU);
+  };
+
+  useEffect(() => {
+    const loadImage = async () => {
+      const src = data
+        ? await getPhaseImage(data.phase)
+        : await ipc(IpcMethod.FILE, Images!.MENU);
+      setImageSrc(src);
+    };
+    loadImage();
+  }, [data]);
+
+  return <img src={imageSrc} />;
 };
 
 export default TeemoImage;
