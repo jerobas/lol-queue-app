@@ -7,7 +7,6 @@ import React, {
   useRef,
   useEffect,
   useCallback,
-  ReactNode,
 } from "react";
 import io, { Socket } from "socket.io-client";
 import Peer, { MediaConnection } from "peerjs";
@@ -29,6 +28,7 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
   const [playerName, setPlayerName] = useState<string>("");
   const [summonerId, setSummonerId] = useState<string>("");
   const [joinedRoom, setJoinedRoom] = useState<boolean>(false);
+  const [showVoip, setShowVoip] = useState<boolean>(false);
   const [users, setUsers] = useState<IPlayer[]>([]);
   const [audioStreams, setAudioStreams] =
     useState<Record<string, MediaStream>>();
@@ -160,7 +160,7 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
     setJoinedRoom(false);
 
     notify.success("O jogo terminou, vaza!");
-  }, [roomId, playerName]);
+  }, [roomId, playerName, notify]);
 
   const addAudioStream = useCallback((name: string, stream: MediaStream) => {
     if (name)
@@ -228,6 +228,8 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
         muteStates,
         toggleMute,
         myAudioRef,
+        showVoip,
+        setShowVoip,
       }}
     >
       {children}

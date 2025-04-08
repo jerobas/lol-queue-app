@@ -30,7 +30,9 @@ export interface VoipContextType {
   roomId: string;
   playerName: string;
   summonerId: string;
+  showVoip: boolean;
   setRoomId: (id: string) => void;
+  setShowVoip: (flag: boolean) => void;
   setPlayerName: (name: string) => void;
   setSummonerId: (name: string) => void;
   joinedRoom: boolean;
@@ -76,6 +78,7 @@ export enum GamePhase {
   POSTGAME = "WaitingForStats",
   RECONNECT = "Reconnect",
   ERRORMENU = "Request failed with status code 404",
+  END = "EndOfGame"
 }
 
 export enum Routes {

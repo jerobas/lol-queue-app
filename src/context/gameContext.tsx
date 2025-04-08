@@ -7,7 +7,6 @@ export const useGame = () => useContext(GameContext);
 
 export const GameProvider = ({ children }: GameProviderProps) => {
   const [teams, setTeams] = useState<Teams>();
-
   return (
     <GameContext.Provider value={{ teams, setTeams }}>
       {children}

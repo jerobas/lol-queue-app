@@ -14,11 +14,12 @@ const Voip = () => {
     muteStates,
     toggleMute,
     myAudioRef,
+    showVoip,
   } = useVoip();
 
   return (
     <div className="overflow-y-auto p-4 flex flex-col items-center justify-center">
-      {!joinedRoom ? (
+      {!joinedRoom && showVoip ? (
         <button
           onClick={joinRoom}
           className="px-5 py-3 bg-green-600 text-white rounded-md cursor-pointer text-lg w-full box-border"
