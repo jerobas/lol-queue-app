@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.7 (2025-04-08)
+
+
+### Bug Fixes
+
+* change yml to exe ([5940415](https://github.com/jerobas/queemo/commit/5940415a8d5b6f284c151205dd07a34dc2bf604f))
+
 ### 1.0.6 (2025-04-08)
 
 ### 1.0.5 (2025-04-08)
