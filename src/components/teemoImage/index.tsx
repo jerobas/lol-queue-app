@@ -8,7 +8,7 @@ interface TeemoImageProps {
 
 const getImageSrc = (phase?: string) => {
   const imageMap: Partial<Record<GamePhase, Images>> = {
-    [GamePhase.INGAME]: Images.INGAME,
+    [GamePhase.INPROGRESS]: Images.INGAME,
     [GamePhase.LOBBY]: Images.LOBBY,
     [GamePhase.MATCHMAKING]: Images.QUEUE,
   };

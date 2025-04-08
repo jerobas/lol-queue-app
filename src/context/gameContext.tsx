@@ -39,7 +39,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   const notify = useToast();
 
   useEffect(() => {
-    if (!iconsLoaded) {
+    if (iconsLoaded) {
       notify.success("Você já pode entrar na call!");
     }
   }, [iconsLoaded]);
