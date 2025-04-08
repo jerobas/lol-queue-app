@@ -17,10 +17,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Build and Publish Electron App
+        run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Setup Git
         run: |
@@ -32,10 +37,5 @@ jobs:
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/jerobas/queemo.git
           npx standard-version --no-verify
           git push --follow-tags origin master
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      - name: Build and Publish Electron App
-        run: npm run build-publish
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
