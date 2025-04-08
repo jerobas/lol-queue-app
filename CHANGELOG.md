@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.2.0 (2025-04-08)
+
+
+### Features
+
+* disabel resize ([cff1531](https://github.com/jerobas/queemo/commit/cff15310196d5d601e906950c9dc71ed1a84be12))
+
 ## 1.1.0 (2025-04-08)
 
 
