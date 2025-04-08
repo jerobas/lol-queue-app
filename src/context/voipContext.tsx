@@ -93,7 +93,22 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
         connectToUsers(updatedPlayers);
       });
     }
-  }, [peerId, joinedRoom, teams]);
+  }, [peerId, joinedRoom]);
+
+  useEffect(() => {
+    socketRef.current?.on("playerDisconnected", (summonerId: string) => {
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user.summonerId !== summonerId)
+      );
+      const disconnectedUser = users.find(
+        (user) => user.summonerId === summonerId
+      );
+
+      if (disconnectedUser) {
+        removeAudioStream(disconnectedUser.name);
+      }
+    });
+  }, [users]);
 
   const connectToUsers = useCallback(
     (players: IPlayer[]) => {
