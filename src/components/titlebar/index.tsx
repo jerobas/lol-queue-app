@@ -19,11 +19,11 @@ const TitleBar = () => {
       >
         <button
           onClick={() => ipc(IpcMethod.MINIMIZE, "")}
-          className="w-3 h-3 bg-yellow-400 rounded-full"
+          className="w-3 h-3 bg-yellow-400 rounded-full cursor-pointer"
         />
         <button
           onClick={() => ipc(IpcMethod.CLOSE, "")}
-          className="w-3 h-3 bg-red-500 rounded-full"
+          className="w-3 h-3 bg-red-500 rounded-full cursor-pointer"
         />
       </div>
     </div>
