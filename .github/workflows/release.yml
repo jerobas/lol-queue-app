@@ -46,3 +46,4 @@ jobs:
           gh release create "$tag" --generate-notes release/**/*
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        shell: bash
