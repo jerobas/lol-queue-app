@@ -45,9 +45,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
+      - name: Get current tag
+        id: get_tag
+        run: echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
           files: release/**/*
+          tag_name: ${{ steps.get_tag.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
