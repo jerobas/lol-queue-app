@@ -35,24 +35,14 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
-      - name: Bump version and push tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin master
-          npx standard-version --no-verify
-          git push --follow-tags origin master
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      - name: Get current tag
-        id: get_tag
-        run: echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub Release and Upload Assets
-        uses: softprops/action-gh-release@v2
-        with:
-          files: release/**/*
-          tag_name: ${{ steps.get_tag.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          - name: Bump version, push tag and create GitHub Release
+          run: |
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git pull --rebase origin master
+            npx standard-version --no-verify
+            git push --follow-tags origin master
+            tag=$(git describe --tags)
+            gh release create "$tag" --generate-notes release/**/*
+          env:
+            GH_TOKEN: ${{ secrets.GH_TOKEN }}}
