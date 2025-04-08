@@ -1,36 +1,31 @@
 import { useEffect, useState } from "react";
-import { IpcMethod, ISession } from "../../interfaces";
+import { ISession } from "../../interfaces";
 import { GamePhase, Images } from "../../interfaces";
-import { ipc } from "../../utils";
 
 interface TeemoImageProps {
-  data: ISession | undefined;
+  data?: ISession;
 }
+
+const getImageSrc = (phase?: string) => {
+  const imageMap: Partial<Record<GamePhase, Images>> = {
+    [GamePhase.INGAME]: Images.INGAME,
+    [GamePhase.LOBBY]: Images.LOBBY,
+    [GamePhase.MATCHMAKING]: Images.QUEUE,
+  };
+
+  const image = imageMap[phase as GamePhase] || Images.MENU;
+
+  return `https://raw.githubusercontent.com/jerobas/queemo/master/public/images/${image}`;
+};
 
 const TeemoImage = ({ data }: TeemoImageProps) => {
   const [imageSrc, setImageSrc] = useState<string>("");
 
-  const getPhaseImage = async (phase: string) => {
-    if (phase === GamePhase.INGAME)
-      return await ipc(IpcMethod.FILE, Images!.INGAME);
-    else if (phase === GamePhase.LOBBY)
-      return await ipc(IpcMethod.FILE, Images!.LOBBY);
-    else if (phase === GamePhase.MATCHMAKING)
-      return await ipc(IpcMethod.FILE, Images!.QUEUE);
-    return await ipc(IpcMethod.FILE, Images!.MENU);
-  };
-
   useEffect(() => {
-    const loadImage = async () => {
-      const src = data
-        ? await getPhaseImage(data.phase)
-        : await ipc(IpcMethod.FILE, Images!.MENU);
-      setImageSrc(src);
-    };
-    loadImage();
-  }, [data]);
+    setImageSrc(getImageSrc(data?.phase));
+  }, [data?.phase]);
 
-  return <img src={imageSrc} />;
+  return <img src={imageSrc} alt="Teemo Phase" />;
 };
 
 export default TeemoImage;

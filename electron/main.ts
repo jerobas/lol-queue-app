@@ -3,7 +3,6 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { getLockFile } from "./helpers/lockfile";
 import ApiService from "./helpers/axios";
-import { getImagePath } from "./helpers/file";
 import { IpcMethod } from "../src/interfaces";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -84,8 +83,4 @@ ipcMain.handle(IpcMethod.MINIMIZE, () => {
 
 ipcMain.handle(IpcMethod.CLOSE, () => {
   win?.close();
-});
-
-ipcMain.handle(IpcMethod.FILE, (_event, file: string) => {
-  return getImagePath(file);
 });

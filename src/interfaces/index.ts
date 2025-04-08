@@ -63,8 +63,7 @@ export enum IpcMethod {
   GET = "lol-api:get",
   POST = "lol-api:post",
   MINIMIZE = "window:minimize",
-  CLOSE = "window:close",
-  FILE = "file",
+  CLOSE = "window:close"
 }
 
 export interface ToastNotify

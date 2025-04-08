@@ -9,7 +9,7 @@
   },
   "files": [
     "dist",
-    "dist-electron"
+    "dist-electron",
   ],
   "mac": {
     "target": [
