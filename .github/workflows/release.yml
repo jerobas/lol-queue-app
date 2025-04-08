@@ -24,8 +24,6 @@ jobs:
 
       - name: Setup Git and push tag
         run: |
-          git config user.name "alfred-jerobas"
-          git config user.email "jerobas.alfred@gmail.com"
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/jerobas/queemo.git
       
           echo "🔍 Git remote after setting:"
