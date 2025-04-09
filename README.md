@@ -8,7 +8,7 @@ Outros projetos como o [Porofessor](https://porofessor.gg/) e [Blitz](https://bl
 
 ## Instalação 
 
-Baixe a ultima release do prjeto aqui ⬇️
+Baixe a última release do projeto aqui ⬇️
 
 [![Latest Release](https://img.shields.io/github/v/release/jerobas/queemo)](https://github.com/jerobas/queemo/releases)
 
