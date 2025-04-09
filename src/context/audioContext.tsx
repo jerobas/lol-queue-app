@@ -4,14 +4,12 @@ import { IpcMethod } from "../interfaces";
 
 interface IAudioInputContext {
   selectedDeviceId: string | null;
-  setSelectedDeviceId: (id: string) => void;
   availableDevices: MediaDeviceInfo[];
   storeDeviceId: (id: string) => void;
 }
 
 const audioInputContext = createContext<IAudioInputContext>({
   selectedDeviceId: null,
-  setSelectedDeviceId: () => {},
   availableDevices: [],
   storeDeviceId: () => {},
 });
