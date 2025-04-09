@@ -2,14 +2,15 @@ name: Build and Release Queemo
 
 on:
   push:
-    tags:
-      - 'v*.*.*' 
     branches:
       - master
 
+permissions:
+  contents: write
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -19,37 +20,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build app
+      - name: Build and Publish Electron App
         run: npm run build
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-artifacts
-          path: dist/
-
-  release:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: release-artifacts
-          path: dist/
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            dist/**/*.exe
-            dist/**/*.dmg
-            dist/**/*.AppImage
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Bump version, push tag and create GitHub Release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin master
+          npx standard-version --no-verify
+          git push --follow-tags origin master
+          tag=$(git describe --tags)
+          gh release create "$tag" --generate-notes release/**/*.exe
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        shell: bash

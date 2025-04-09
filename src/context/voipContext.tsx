@@ -7,37 +7,18 @@ import React, {
   useRef,
   useEffect,
   useCallback,
-  ReactNode,
 } from "react";
 import io, { Socket } from "socket.io-client";
 import Peer, { MediaConnection } from "peerjs";
 import { useToast } from "./toastContext";
 import { useGame } from "./gameContext";
-
-interface VoipContextType {
-  roomId: string;
-  playerName: string;
-  setRoomId: (id: string) => void;
-  setPlayerName: (name: string) => void;
-  joinedRoom: boolean;
-  joinRoom: () => void;
-  leaveRoom: () => void;
-  users: Player[];
-  audioStreams?: Record<string, MediaStream>;
-  muteStates: Record<string, boolean>;
-  toggleMute: (targetPlayerName: string) => void;
-  myAudioRef: React.MutableRefObject<MediaStream | null>;
-}
-
-interface VoipProviderProps {
-  children: ReactNode;
-}
-
-interface Player {
-  name: string;
-  peerId: string;
-  iconUrl?: string | null;
-}
+import {
+  AWS,
+  IPlayer,
+  VoipContextType,
+  VoipProviderProps,
+} from "../interfaces";
+import { useAudioInput } from "./audioContext";
 
 const VoipContext = createContext<VoipContextType>({} as VoipContextType);
 
@@ -46,8 +27,10 @@ export const useVoip = () => useContext(VoipContext);
 export const VoipProvider = ({ children }: VoipProviderProps) => {
   const [roomId, setRoomId] = useState<string>("");
   const [playerName, setPlayerName] = useState<string>("");
+  const [summonerId, setSummonerId] = useState<string>("");
   const [joinedRoom, setJoinedRoom] = useState<boolean>(false);
-  const [users, setUsers] = useState<Player[]>([]);
+  const [showVoip, setShowVoip] = useState<boolean>(false);
+  const [users, setUsers] = useState<IPlayer[]>([]);
   const [audioStreams, setAudioStreams] =
     useState<Record<string, MediaStream>>();
   const [muteStates, setMuteStates] = useState<Record<string, boolean>>({});
@@ -59,19 +42,17 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
 
   const notify = useToast();
   const { teams } = useGame();
+  const { selectedDeviceId } = useAudioInput();
 
   useEffect(() => {
-    const socket = io(
-      "http://ec2-15-229-78-33.sa-east-1.compute.amazonaws.com:3001",
-      {
-        autoConnect: false,
-      }
-    );
+    const socket = io(AWS.SOCKET, {
+      autoConnect: false,
+    });
 
     const peer = new Peer(undefined, {
-      host: "ec2-15-229-78-33.sa-east-1.compute.amazonaws.com",
-      port: 3002,
-      path: "peerjs",
+      host: AWS.PEER,
+      port: AWS.PERR_PORT,
+      path: AWS.PATH,
     });
 
     socket.connect();
@@ -83,41 +64,67 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
     });
 
     peer.on("call", (call: MediaConnection) => {
-      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-        call.answer(stream);
-        call.on("stream", (userStream: MediaStream) => {
-          addAudioStream(call.metadata.playerName, userStream);
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: selectedDeviceId
+            ? { deviceId: { exact: selectedDeviceId } }
+            : true,
+        })
+        .then((stream) => {
+          call.answer(stream);
+          call.on("stream", (userStream: MediaStream) => {
+            addAudioStream(call.metadata.playerName, userStream);
+          });
         });
-      });
     });
 
     return () => {
       peer.disconnect();
       socket.disconnect();
     };
-  }, []);
+  }, [selectedDeviceId]);
 
   useEffect(() => {
     if (peerId && joinedRoom) {
-      socketRef.current?.on("userJoined", (players: Player[]) => {
+      socketRef.current?.on("userJoined", (players: IPlayer[]) => {
         const updatedPlayers = players.map((player) => {
           const matchingPlayer = [...teams.teamOne, ...teams.teamTwo].find(
-            (teamPlayer) => teamPlayer.summonerInternalName === player.name
+            (teamPlayer) => teamPlayer.summonerId === player.summonerId
           );
 
           return {
             ...player,
-            iconUrl: matchingPlayer ? matchingPlayer.iconUrl : null,
+            iconUrl: matchingPlayer ? matchingPlayer.championIcon : null,
           };
         });
-        setUsers(updatedPlayers);
-        connectToUsers(updatedPlayers);
+
+        const uniquePlayers = Array.from(
+          new Map(updatedPlayers.map((p) => [p.summonerId, p])).values()
+        );
+
+        setUsers(uniquePlayers);
+        connectToUsers(uniquePlayers);
       });
     }
   }, [peerId, joinedRoom]);
 
+  useEffect(() => {
+    socketRef.current?.on("playerDisconnected", (summonerId: string) => {
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user.summonerId !== summonerId)
+      );
+      const disconnectedUser = users.find(
+        (user) => user.summonerId === summonerId
+      );
+
+      if (disconnectedUser) {
+        removeAudioStream(disconnectedUser.name);
+      }
+    });
+  }, [users]);
+
   const connectToUsers = useCallback(
-    (players: Player[]) => {
+    (players: IPlayer[]) => {
       for (const player of players) {
         if (player.peerId !== peerId) {
           const call = peerInstanceRef.current?.call(
@@ -144,12 +151,23 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
     if (!roomId || !playerName)
       return notify.warning("Ocorreu um erro ao entrar na call");
 
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      myAudioRef.current = stream;
-      socketRef.current?.emit("joinRoom", { roomId, playerName, peerId });
-      setJoinedRoom(true);
-    });
-  }, [roomId, playerName, peerId]);
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: selectedDeviceId
+          ? { deviceId: { exact: selectedDeviceId } }
+          : true,
+      })
+      .then((stream) => {
+        myAudioRef.current = stream;
+        socketRef.current?.emit("joinRoom", {
+          roomId,
+          playerName,
+          peerId,
+          summonerId,
+        });
+        setJoinedRoom(true);
+      });
+  }, [roomId, playerName, peerId, notify, summonerId, selectedDeviceId]);
 
   const leaveRoom = useCallback(() => {
     socketRef.current?.emit("leaveRoom", { roomId, playerName });
@@ -176,7 +194,7 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
     setJoinedRoom(false);
 
     notify.success("O jogo terminou, vaza!");
-  }, [roomId, playerName]);
+  }, [roomId, playerName, notify]);
 
   const addAudioStream = useCallback((name: string, stream: MediaStream) => {
     if (name)
@@ -232,6 +250,8 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
       value={{
         roomId,
         playerName,
+        summonerId,
+        setSummonerId,
         setRoomId,
         setPlayerName,
         joinedRoom,
@@ -242,6 +262,8 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
         muteStates,
         toggleMute,
         myAudioRef,
+        showVoip,
+        setShowVoip,
       }}
     >
       {children}

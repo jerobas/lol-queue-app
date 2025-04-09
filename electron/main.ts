@@ -26,6 +26,7 @@ function createWindow() {
     width: 386,
     height: 678,
     frame: false,
+    maximizable: false,
     resizable: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {

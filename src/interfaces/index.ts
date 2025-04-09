@@ -1,6 +1,7 @@
+import { ReactNode } from "react";
 import { ToastOptions } from "react-toastify";
 
-const BASE_URL = "ec2-15-229-78-33.sa-east-1.compute.amazonaws.com";
+const BASE_URL = "ec2-15-228-45-137.sa-east-1.compute.amazonaws.com";
 
 export interface ISession {
   gameData: {
@@ -20,9 +21,50 @@ export interface ISession {
 
 export interface IPlayer {
   name: string;
-  accountId: number;
-  summonerId: number;
-  level: number;
+  peerId: string;
+  summonerId: string;
+  iconUrl?: string | null;
+}
+
+export interface VoipContextType {
+  roomId: string;
+  playerName: string;
+  summonerId: string;
+  showVoip: boolean;
+  setRoomId: (id: string) => void;
+  setShowVoip: (flag: boolean) => void;
+  setPlayerName: (name: string) => void;
+  setSummonerId: (name: string) => void;
+  joinedRoom: boolean;
+  joinRoom: () => void;
+  leaveRoom: () => void;
+  users: IPlayer[];
+  audioStreams?: Record<string, MediaStream>;
+  muteStates: Record<string, boolean>;
+  toggleMute: (targetPlayerName: string) => void;
+  myAudioRef: React.MutableRefObject<MediaStream | null>;
+}
+
+interface TeamPlayer {
+  iconUrl: string;
+  [key: string]: any;
+}
+
+export interface GameProviderProps {
+  children: ReactNode;
+}
+export interface BurgerButtonProps {
+  sidebarState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+}
+
+export interface Teams {
+  teamOne: TeamPlayer[];
+  teamTwo: TeamPlayer[];
+}
+
+export interface GameContextType {
+  teams?: Teams;
+  setTeams: React.Dispatch<React.SetStateAction<Teams | undefined>>;
 }
 
 export enum GamePhase {
@@ -36,6 +78,7 @@ export enum GamePhase {
   POSTGAME = "WaitingForStats",
   RECONNECT = "Reconnect",
   ERRORMENU = "Request failed with status code 404",
+  END = "EndOfGame"
 }
 
 export enum Routes {
@@ -63,7 +106,7 @@ export enum IpcMethod {
   GET = "lol-api:get",
   POST = "lol-api:post",
   MINIMIZE = "window:minimize",
-  CLOSE = "window:close"
+  CLOSE = "window:close",
 }
 
 export interface ToastNotify
@@ -78,4 +121,8 @@ export interface Page {
 
 export interface Pages {
   [key: string]: Page;
+}
+
+export interface VoipProviderProps {
+  children: ReactNode;
 }
