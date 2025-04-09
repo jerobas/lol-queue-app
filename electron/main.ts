@@ -73,10 +73,13 @@ app.on("activate", () => {
 
 app.whenReady().then(() => {
   createWindow()
-
-  if(app.isPackaged)
-    autoUpdater.checkForUpdatesAndNotify();
 });
+
+ipcMain.handle(IpcMethod.UPDATER_CHECK, async () => !app.isPackaged ? null : (await autoUpdater.checkForUpdates())?.isUpdateAvailable)
+
+ipcMain.handle(IpcMethod.UPDATER_DOWNLOAD, async () => !app.isPackaged ? null : await autoUpdater.downloadUpdate())
+
+ipcMain.handle(IpcMethod.UPDATER_INSTALL, async () => !app.isPackaged ? null : autoUpdater.quitAndInstall())
 
 ipcMain.handle(IpcMethod.GET, async (_event, endpoint: string) => {
   try {

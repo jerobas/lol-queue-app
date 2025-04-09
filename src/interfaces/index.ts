@@ -110,13 +110,16 @@ export enum IpcMethod {
   POST = "lol-api:post",
   MINIMIZE = "window:minimize",
   CLOSE = "window:close",
+  UPDATER_CHECK = "updater:check",
+  UPDATER_DOWNLOAD = "updater:download",
+  UPDATER_INSTALL = "updater:install",
 }
 
 export interface ToastNotify
   extends Record<
     "success" | "error" | "info" | "warning" | "custom",
     (message: string, options?: ToastOptions) => void
-  > {}
+  > { }
 
 export interface Page {
   [key: string]: React.ReactElement;

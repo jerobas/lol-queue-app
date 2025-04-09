@@ -1,0 +1,5 @@
+@use "../../variables.scss";
+
+.primary-color {
+    color: variables.$primary-color;
+}
