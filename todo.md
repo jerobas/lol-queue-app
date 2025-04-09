@@ -12,6 +12,7 @@
 - [ ] Não deixar mudar para a aba que já está
 - [ ] Tipagem em geral
 - [ ] Tirar minhas (joão) interfaces pra pasta de interface
+- [ ] Better align burguer button
 
 ### Features
 
@@ -29,5 +30,8 @@
 - [ ] Poder ordenar as páginas
 - [ ] Marca quando pessoa tá falando
 - [ ] Cancelamento de ruído
-- [ X ] Um bom readme
-- [ ] AutoUpdate
+- [ x ] Um bom readme
+- [ x ] AutoUpdate 1.0
+- [ ] AutoUpdate 2.0
+- [ ] Terraform
+- [ ] Optional version tag
