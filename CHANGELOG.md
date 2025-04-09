@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.4.0 (2025-04-09)
+
+
+### Features
+
+* check lol client ([1301e9b](https://github.com/jerobas/queemo/commit/1301e9b15014ab1ac730bec9a58260a0cbffb03e))
+
 ### 1.3.5 (2025-04-09)
 
 
