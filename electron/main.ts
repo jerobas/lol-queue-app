@@ -1,6 +1,8 @@
+import fs from "fs";
 import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import store from "./helpers/store";
 import { getLockFile } from "./helpers/lockfile";
 import ApiService from "./helpers/axios";
 import isProcessRunning from "./helpers/inspect";
@@ -56,6 +58,16 @@ function createWindow() {
   } else {
     win.loadFile(path.join(RENDERER_DIST, "index.html"));
   }
+
+  fs.watch(path.dirname(lockfile.filePath), (_, filename) => {
+    if (filename === "lockfile" && !fs.existsSync(lockfile.filePath)) {
+      dialog.showErrorBox(
+        "League of Legends foi fechado",
+        "O jogo foi encerrado. O aplicativo também será fechado."
+      );
+      app.quit();
+    }
+  });
 }
 
 app.on("window-all-closed", () => {
@@ -72,14 +84,22 @@ app.on("activate", () => {
 });
 
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 });
 
-ipcMain.handle(IpcMethod.UPDATER_CHECK, async () => !app.isPackaged ? null : (await autoUpdater.checkForUpdates())?.isUpdateAvailable)
+ipcMain.handle(IpcMethod.UPDATER_CHECK, async () =>
+  !app.isPackaged
+    ? null
+    : (await autoUpdater.checkForUpdates())?.isUpdateAvailable
+);
 
-ipcMain.handle(IpcMethod.UPDATER_DOWNLOAD, async () => !app.isPackaged ? null : await autoUpdater.downloadUpdate())
+ipcMain.handle(IpcMethod.UPDATER_DOWNLOAD, async () =>
+  !app.isPackaged ? null : await autoUpdater.downloadUpdate()
+);
 
-ipcMain.handle(IpcMethod.UPDATER_INSTALL, async () => !app.isPackaged ? null : autoUpdater.quitAndInstall())
+ipcMain.handle(IpcMethod.UPDATER_INSTALL, async () =>
+  !app.isPackaged ? null : autoUpdater.quitAndInstall()
+);
 
 ipcMain.handle(IpcMethod.GET, async (_event, endpoint: string) => {
   try {
@@ -105,4 +125,12 @@ ipcMain.handle(IpcMethod.MINIMIZE, () => {
 
 ipcMain.handle(IpcMethod.CLOSE, () => {
   win?.close();
+});
+
+ipcMain.handle(IpcMethod.GET_AUDIO, () => {
+  return store.get("audioDeviceId");
+});
+
+ipcMain.handle(IpcMethod.SET_AUDIO, (_event, id: string) => {
+  store.set("audioDeviceId", id);
 });

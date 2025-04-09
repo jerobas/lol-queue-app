@@ -1,20 +1,19 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-} from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import { ipc } from "../utils";
+import { IpcMethod } from "../interfaces";
 
 interface IAudioInputContext {
   selectedDeviceId: string | null;
   setSelectedDeviceId: (id: string) => void;
   availableDevices: MediaDeviceInfo[];
+  storeDeviceId: (id: string) => void;
 }
 
 const audioInputContext = createContext<IAudioInputContext>({
   selectedDeviceId: null,
-  setSelectedDeviceId: () => { },
+  setSelectedDeviceId: () => {},
   availableDevices: [],
+  storeDeviceId: () => {},
 });
 
 export const AudioInputProvider = ({
@@ -27,17 +26,28 @@ export const AudioInputProvider = ({
     []
   );
 
+  const storeDeviceId = (id: string) => {
+    setSelectedDeviceId(id);
+    ipc(IpcMethod.SET_AUDIO, id);
+  };
+
   const loadDevices = async () => {
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
       const devices = await navigator.mediaDevices.enumerateDevices();
       const audioInputs = devices.filter(
-        (device) => device.kind === 'audioinput'
+        (device) => device.kind === "audioinput"
       );
+
       setAvailableDevices(audioInputs);
 
-      if (!selectedDeviceId && audioInputs.length > 0) {
-        setSelectedDeviceId(audioInputs[0].deviceId);
+      const savedId = await ipc(IpcMethod.GET_AUDIO, "");
+      console.log(savedId);
+
+      if (savedId && audioInputs.some((d) => d.deviceId === savedId)) {
+        setSelectedDeviceId(savedId);
+      } else if (audioInputs.length > 0) {
+        storeDeviceId(audioInputs[0].deviceId);
       }
     } catch (error) {
       console.log("Erro");
@@ -50,7 +60,7 @@ export const AudioInputProvider = ({
 
   return (
     <audioInputContext.Provider
-      value={{ selectedDeviceId, setSelectedDeviceId, availableDevices }}
+      value={{ selectedDeviceId, storeDeviceId, availableDevices }}
     >
       {children}
     </audioInputContext.Provider>

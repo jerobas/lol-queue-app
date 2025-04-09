@@ -113,13 +113,15 @@ export enum IpcMethod {
   UPDATER_CHECK = "updater:check",
   UPDATER_DOWNLOAD = "updater:download",
   UPDATER_INSTALL = "updater:install",
+  SET_AUDIO = "audio:set",
+  GET_AUDIO = "audio:get"
 }
 
 export interface ToastNotify
   extends Record<
     "success" | "error" | "info" | "warning" | "custom",
     (message: string, options?: ToastOptions) => void
-  > { }
+  > {}
 
 export interface Page {
   [key: string]: React.ReactElement;
@@ -131,4 +133,8 @@ export interface Pages {
 
 export interface VoipProviderProps {
   children: ReactNode;
+}
+
+export interface IStore {
+  audioDeviceId: string | null;
 }

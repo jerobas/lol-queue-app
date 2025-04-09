@@ -188,6 +188,7 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
         }
       );
       peerInstanceRef.current.disconnect();
+      peerInstanceRef.current.destroy();
     }
 
     setAudioStreams(undefined);
@@ -219,30 +220,29 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
   const toggleMute = useCallback(
     (targetPlayerName: string) => {
       if (targetPlayerName === playerName) {
-        const track = myAudioRef.current?.getAudioTracks()[0];
-        if (track) {
-          const isMuted = !track.enabled;
-          track.enabled = isMuted;
-          setMuteStates((prev) => ({
-            ...prev,
-            [playerName]: !isMuted!,
-          }));
-        }
-      } else {
-        const stream = audioStreams?.[targetPlayerName];
-        if (stream instanceof MediaStream) {
-          const audioElement = Array.from(
-            document.querySelectorAll("audio")
-          ).find((audio) => audio.srcObject === stream);
+        const stream = myAudioRef.current;
+        if (!stream) return;
 
-          if (audioElement) {
-            const isMuted = !audioElement.muted;
-            audioElement.muted = isMuted;
-            setMuteStates((prev) => ({
-              ...prev,
-              [targetPlayerName]: isMuted,
-            }));
-          }
+        const track = stream.getAudioTracks()[0];
+        if (!track) return;
+
+        if (track.enabled) {
+          track.stop();
+          stream.removeTrack(track);
+          setMuteStates((prev) => ({ ...prev, [playerName]: true }));
+        } else {
+          navigator.mediaDevices
+            .getUserMedia({
+              audio: selectedDeviceId
+                ? { deviceId: { exact: selectedDeviceId } }
+                : true,
+            })
+            .then((newStream) => {
+              const newTrack = newStream.getAudioTracks()[0];
+              stream.addTrack(newTrack);
+              myAudioRef.current = stream;
+              setMuteStates((prev) => ({ ...prev, [playerName]: false }));
+            });
         }
       }
     },

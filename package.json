@@ -17,6 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@tailwindcss/vite": "^4.1.1",
     "axios": "^1.8.4",
+    "electron-store": "^10.0.1",
     "electron-updater": "^6.6.2",
     "peerjs": "^1.5.4",
     "react": "^18.2.0",

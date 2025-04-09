@@ -39,6 +39,7 @@ export const getLockFile = () => {
         port: Number(port),
         password,
         protocol,
+        filePath
       };
     }
   }

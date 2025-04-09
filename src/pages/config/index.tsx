@@ -1,7 +1,7 @@
 import { useAudioInput } from "../../context/audioContext";
 
 const Config = () => {
-  const { selectedDeviceId, setSelectedDeviceId, availableDevices } =
+  const { selectedDeviceId, storeDeviceId, availableDevices } =
     useAudioInput();
 
   return (
@@ -12,7 +12,7 @@ const Config = () => {
       <select
         className="w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={selectedDeviceId || ""}
-        onChange={(e) => setSelectedDeviceId(e.target.value)}
+        onChange={(e) => storeDeviceId(e.target.value)}
       >
         {availableDevices.map((device: any) => (
           <option key={device.deviceId} value={device.deviceId}>
