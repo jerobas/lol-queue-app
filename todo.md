@@ -29,4 +29,5 @@
 - [ ] Poder ordenar as páginas
 - [ ] Marca quando pessoa tá falando
 - [ ] Cancelamento de ruído
-- [ ] Um bom readme
+- [ X ] Um bom readme
+- [ ] AutoUpdate
