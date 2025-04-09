@@ -27,3 +27,6 @@
 - [ ] Extensões
 - [ ] "Refatorar" o código
 - [ ] Poder ordenar as páginas
+- [ ] Marca quando pessoa tá falando
+- [ ] Cancelamento de ruído
+- [ ] Um bom readme
