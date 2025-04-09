@@ -1,8 +1,9 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { getLockFile } from "./helpers/lockfile";
 import ApiService from "./helpers/axios";
+import isProcessRunning from "./helpers/inspect";
 import { IpcMethod } from "../src/interfaces";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -20,6 +21,16 @@ let api: ApiService;
 let win: BrowserWindow | null;
 
 function createWindow() {
+  isProcessRunning().then((isRunning) => {
+    if (!isRunning) {
+      dialog.showErrorBox(
+        "League of Legends não está aberto",
+        "Por favor, abra o League of Legends e faça login antes de iniciar o aplicativo."
+      );
+      app.quit();
+      return;
+    }
+  });
   const lockfile = getLockFile();
   api = new ApiService(lockfile.port, lockfile.password);
   win = new BrowserWindow({

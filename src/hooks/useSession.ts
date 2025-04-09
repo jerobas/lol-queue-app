@@ -13,7 +13,6 @@ const useSession = (initialIntervalMS = 2500) => {
 
   const fetchSession = useCallback(async () => {
     const result: ISession = await ipc(IpcMethod.GET, Routes.SESSION);
-    console.log(result.phase)
     if (result?.error !== GamePhase.ERRORMENU) {
       if (
         result.phase === GamePhase.READYCHECK &&
