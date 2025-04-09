@@ -5,7 +5,7 @@ const Home = () => {
   const { data } = useGame();
 
   return (
-    <div className="overflow-y-auto align-middle justify-center items-center">
+    <div className="overflow-y-auto align-middle justify-center items-center bg-red-400">
       <TeemoImage data={data} />
     </div>
   );
