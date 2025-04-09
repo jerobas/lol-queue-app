@@ -29,9 +29,9 @@ const Voip = () => {
       ) : (
         <div className="w-full max-w-md mt-5">
           <ul className="list-none p-0 text-left">
-            {users.map((user, index) => (
+            {users.map((user) => (
               <li
-                key={index}
+                key={user.summonerId}
                 className="mb-2 p-3 border border-gray-300 rounded-md flex justify-between items-center bg-gray-100 shadow"
               >
                 <div className="flex items-center">
