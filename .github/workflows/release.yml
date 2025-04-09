@@ -9,6 +9,10 @@ permissions:
   contents: write
 
 jobs:
+  use-template:
+    uses: jerobas/.github/.github/workflows/update-readme.yml@main
+    secrets: inherit
+
   build:
     runs-on: windows-latest
 
