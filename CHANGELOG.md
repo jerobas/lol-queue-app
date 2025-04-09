@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.5.0 (2025-04-09)
+
+
+### Features
+
+* Update todo.md ([1bae812](https://github.com/jerobas/queemo/commit/1bae81249c91d4101b01d3145d512132a17be9b5))
+
 ## 1.4.0 (2025-04-09)
 
 
