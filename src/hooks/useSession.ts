@@ -5,14 +5,15 @@ import { useGame } from "../context/gameContext";
 import { useVoip } from "../context/voipContext";
 
 const useSession = (initialIntervalMS = 2500) => {
-  const [data, setData] = useState<ISession>();
   const [intervalMS, setIntervalMS] = useState(initialIntervalMS);
   const lastPhase = useRef<any>();
-  const { setTeams } = useGame();
-  const { setRoomId, setPlayerName, setSummonerId, setShowVoip } = useVoip();
+  const { setTeams, setData } = useGame();
+  const { setRoomId, setPlayerName, setSummonerId, setShowVoip, leaveRoom } =
+    useVoip();
 
   const fetchSession = useCallback(async () => {
     const result: ISession = await ipc(IpcMethod.GET, Routes.SESSION);
+    console.log(result.phase)
     if (result?.error !== GamePhase.ERRORMENU) {
       if (
         result.phase === GamePhase.READYCHECK &&
@@ -53,6 +54,10 @@ const useSession = (initialIntervalMS = 2500) => {
         setShowVoip(true);
       }
 
+      if (result.phase === GamePhase.END) {
+        if (lastPhase.current !== GamePhase.END) leaveRoom();
+      }
+
       lastPhase.current = result.phase;
 
       setTeams({
@@ -65,19 +70,23 @@ const useSession = (initialIntervalMS = 2500) => {
       );
     } else {
       setIntervalMS(2500);
-      setSummonerId("");
-      setPlayerName("");
       setShowVoip(false);
     }
-  }, [setPlayerName, setRoomId, setTeams, setSummonerId, setShowVoip]);
+  }, [
+    setPlayerName,
+    setRoomId,
+    setTeams,
+    setSummonerId,
+    setShowVoip,
+    setData,
+    leaveRoom,
+  ]);
 
   useEffect(() => {
     fetchSession();
     const interval = setInterval(fetchSession, intervalMS);
     return () => clearInterval(interval);
   }, [fetchSession, intervalMS]);
-
-  return data;
 };
 
 export default useSession;

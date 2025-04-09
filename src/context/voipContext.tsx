@@ -19,6 +19,7 @@ import {
   VoipProviderProps,
 } from "../interfaces";
 import { useAudioInput } from "./audioContext";
+import { useNavigate } from "react-router-dom";
 
 const VoipContext = createContext<VoipContextType>({} as VoipContextType);
 
@@ -39,6 +40,7 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
   const myAudioRef = useRef<MediaStream | null>(null);
   const peerInstanceRef = useRef<Peer | null>(null);
   const socketRef = useRef<Socket | null>(null);
+  const navigate = useNavigate();
 
   const notify = useToast();
   const { teams } = useGame();
@@ -192,9 +194,10 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
     setMuteStates({});
     setUsers([]);
     setJoinedRoom(false);
-
-    notify.success("O jogo terminou, vaza!");
-  }, [roomId, playerName, notify]);
+    setShowVoip(false);
+    setRoomId("");
+    navigate("/");
+  }, [roomId, playerName, navigate]);
 
   const addAudioStream = useCallback((name: string, stream: MediaStream) => {
     if (name)
@@ -216,14 +219,15 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
   const toggleMute = useCallback(
     (targetPlayerName: string) => {
       if (targetPlayerName === playerName) {
-        const isMuted = !myAudioRef.current?.getAudioTracks()[0].enabled;
-        myAudioRef.current?.getAudioTracks().forEach((track) => {
-          track.enabled = isMuted!;
-        });
-        setMuteStates((prev) => ({
-          ...prev,
-          [playerName]: !isMuted!,
-        }));
+        const track = myAudioRef.current?.getAudioTracks()[0];
+        if (track) {
+          const isMuted = !track.enabled;
+          track.enabled = isMuted;
+          setMuteStates((prev) => ({
+            ...prev,
+            [playerName]: !isMuted!,
+          }));
+        }
       } else {
         const stream = audioStreams?.[targetPlayerName];
         if (stream instanceof MediaStream) {

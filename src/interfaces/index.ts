@@ -32,7 +32,7 @@ export interface VoipContextType {
   summonerId: string;
   showVoip: boolean;
   setRoomId: (id: string) => void;
-  setShowVoip: (flag: boolean) => void;
+  setShowVoip: React.Dispatch<React.SetStateAction<boolean>>;
   setPlayerName: (name: string) => void;
   setSummonerId: (name: string) => void;
   joinedRoom: boolean;
@@ -65,6 +65,8 @@ export interface Teams {
 export interface GameContextType {
   teams?: Teams;
   setTeams: React.Dispatch<React.SetStateAction<Teams | undefined>>;
+  data?: ISession;
+  setData: React.Dispatch<React.SetStateAction<ISession | undefined>>;
 }
 
 export enum GamePhase {
@@ -78,7 +80,8 @@ export enum GamePhase {
   POSTGAME = "WaitingForStats",
   RECONNECT = "Reconnect",
   ERRORMENU = "Request failed with status code 404",
-  END = "EndOfGame"
+  END = "EndOfGame",
+  CHAMPSELECT = "ChampSelect",
 }
 
 export enum Routes {

@@ -30,7 +30,7 @@ const Sidebar = ({
         <ul className="space-y-2">
           {Object.entries(routes).map(([key, route]) => {
             if (key === "voip") {
-              if (!showVoip) return <></>;
+              if (!showVoip) return null;
             }
             return <PageButton key={key} route={route} name={key} />;
           })}

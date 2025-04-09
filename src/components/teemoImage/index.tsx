@@ -10,6 +10,7 @@ const getImageSrc = (phase?: string) => {
   const imageMap: Partial<Record<GamePhase, Images>> = {
     [GamePhase.INPROGRESS]: Images.INGAME,
     [GamePhase.LOBBY]: Images.LOBBY,
+    [GamePhase.CHAMPSELECT]: Images.QUEUE,
     [GamePhase.MATCHMAKING]: Images.QUEUE,
   };
 
