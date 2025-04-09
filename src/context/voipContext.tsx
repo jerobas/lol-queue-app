@@ -89,8 +89,13 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
             iconUrl: matchingPlayer ? matchingPlayer.championIcon : null,
           };
         });
-        setUsers(updatedPlayers);
-        connectToUsers(updatedPlayers);
+
+        const uniquePlayers = Array.from(
+          new Map(updatedPlayers.map((p) => [p.summonerId, p])).values()
+        );
+        
+        setUsers(uniquePlayers);
+        connectToUsers(uniquePlayers);
       });
     }
   }, [peerId, joinedRoom]);
