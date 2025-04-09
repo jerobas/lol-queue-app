@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.2.2 (2025-04-09)
+
+
+### Bug Fixes
+
+* change key in map ([a4b810c](https://github.com/jerobas/queemo/commit/a4b810c3db8e592a9a3b73d1bc945f011c94aa5b))
+
 ### 1.2.1 (2025-04-08)
 
 
