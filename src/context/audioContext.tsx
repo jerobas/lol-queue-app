@@ -11,7 +11,11 @@ interface IAudioInputContext {
   availableDevices: MediaDeviceInfo[];
 }
 
-const audioInputContext = createContext<IAudioInputContext>();
+const audioInputContext = createContext<IAudioInputContext>({
+  selectedDeviceId: null,
+  setSelectedDeviceId: () => { },
+  availableDevices: [],
+});
 
 export const AudioInputProvider = ({
   children,
