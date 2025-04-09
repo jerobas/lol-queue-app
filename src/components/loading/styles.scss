@@ -1,5 +1,7 @@
-@import "./la-ball-clip-rotate.scss";
-@import "../../variables.scss";
+@forward "../../variables.scss"; 
+@use "../../variables.scss";
+
+@use "./la-ball-clip-rotate.scss";
 
 /* SCSS HEX */
 
@@ -11,7 +13,7 @@
 }
 
 path {
-    animation-duration: $animation-period;
+    animation-duration: variables.$animation-period;
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
 }
@@ -47,7 +49,7 @@ path {
 
 @keyframes light-green {
     0% {
-        fill: $light-green;
+        fill: variables.$light-green;
     }
 
     50% {
@@ -55,13 +57,13 @@ path {
     }
 
     100% {
-        fill: $light-green;
+        fill: variables.$light-green;
     }
 }
 
 @keyframes light-purple {
     0% {
-        fill: $light-purple;
+        fill: variables.$light-purple;
     }
 
     50% {
@@ -69,13 +71,13 @@ path {
     }
 
     100% {
-        fill: $light-purple;
+        fill: variables.$light-purple;
     }
 }
 
 @keyframes light-beige {
     0% {
-        fill: $light-beige;
+        fill: variables.$light-beige;
     }
 
     50% {
@@ -83,13 +85,13 @@ path {
     }
 
     100% {
-        fill: $light-beige;
+        fill: variables.$light-beige;
     }
 }
 
 @keyframes dark-purple {
     0% {
-        fill: $dark-purple;
+        fill: variables.$dark-purple;
     }
 
     50% {
@@ -97,13 +99,13 @@ path {
     }
 
     100% {
-        fill: $dark-purple;
+        fill: variables.$dark-purple;
     }
 }
 
 @keyframes green {
     0% {
-        fill: $green;
+        fill: variables.$green;
     }
 
     50% {
@@ -111,13 +113,13 @@ path {
     }
 
     100% {
-        fill: $green;
+        fill: variables.$green;
     }
 }
 
 @keyframes dark-green {
     0% {
-        fill: $dark-green;
+        fill: variables.$dark-green;
     }
 
     50% {
@@ -125,13 +127,13 @@ path {
     }
 
     100% {
-        fill: $dark-green;
+        fill: variables.$dark-green;
     }
 }
 
 @keyframes dark-beige {
     0% {
-        fill: $dark-beige;
+        fill: variables.$dark-beige;
     }
 
     50% {
@@ -139,6 +141,6 @@ path {
     }
 
     100% {
-        fill: $dark-beige;
+        fill: variables.$dark-beige;
     }
 }

@@ -6,7 +6,7 @@
 - [ ] Voice não funcionando fora da aba do voice (não sei se aplica nas outras abas)
 - [ ] Imagem errada quando no pick/ban
 - [ ] Não crashar totalmente sem lockfile
-- [ ] Scss import
+- [ x ] Scss import
 - [ x ] Sair da sala quando o jogo acabar
 - [ ] Trocar loading suspense
 - [ ] Não deixar mudar para a aba que já está

@@ -1,5 +1,5 @@
 @use "sass:math";
-@import "../../variables.scss";
+@use "../../variables.scss";
 
 /* Burger Button */
 
@@ -30,7 +30,7 @@ $button-width: 20px;
     /* 9px height relative to width */
     width: 100%;
     /* Full width of the button */
-    background: $primary-color;
+    background: variables.$primary-color;
     border-radius: calc($button-width * 0.15);
     /* 9px border-radius relative to width */
     left: 0;
