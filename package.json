@@ -3,7 +3,7 @@
   "description": "A simple way to accept queue and a easy voip app for League Of Legends",
   "name": "queemo",
   "private": true,
-  "version": "1.2.2",
+  "version": "1.2.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
