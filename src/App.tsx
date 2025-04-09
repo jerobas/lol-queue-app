@@ -6,34 +6,37 @@ import { routes } from "./pages";
 import { Suspense } from "react";
 import TitleBar from "./components/titlebar";
 import { VoipProvider } from "./context/voipContext";
+import { AudioInputProvider } from "./context/audioContext";
 
 function App() {
   return (
     <ToastProvider>
-      <GameProvider>
-        <VoipProvider>
-          <TitleBar />
-          <Sidebar routes={routes}>
-            <Suspense
-              fallback={
-                <div className="flex justify-center items-center h-screen">
-                  Loading...
-                </div>
-              }
-            >
-              <Routes>
-                {Object.entries(routes).map(([name, route]) => (
-                  <Route
-                    key={name}
-                    path={name === "home" ? "/" : `/${name}`}
-                    element={route["index"]}
-                  />
-                ))}
-              </Routes>
-            </Suspense>
-          </Sidebar>
-        </VoipProvider>
-      </GameProvider>
+      <AudioInputProvider>
+        <GameProvider>
+          <VoipProvider>
+            <TitleBar />
+            <Sidebar routes={routes}>
+              <Suspense
+                fallback={
+                  <div className="flex justify-center items-center h-screen">
+                    Loading...
+                  </div>
+                }
+              >
+                <Routes>
+                  {Object.entries(routes).map(([name, route]) => (
+                    <Route
+                      key={name}
+                      path={name === "home" ? "/" : `/${name}`}
+                      element={route["index"]}
+                    />
+                  ))}
+                </Routes>
+              </Suspense>
+            </Sidebar>
+          </VoipProvider>
+        </GameProvider>
+      </AudioInputProvider>
     </ToastProvider>
   );
 }
