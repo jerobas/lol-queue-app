@@ -224,13 +224,9 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
         if (!stream) return;
 
         const track = stream.getAudioTracks()[0];
-        if (!track) return;
+        const isMuted = muteStates[playerName];
 
-        if (track.enabled) {
-          track.stop();
-          stream.removeTrack(track);
-          setMuteStates((prev) => ({ ...prev, [playerName]: true }));
-        } else {
+        if (!track && isMuted) {
           navigator.mediaDevices
             .getUserMedia({
               audio: selectedDeviceId
@@ -243,10 +239,30 @@ export const VoipProvider = ({ children }: VoipProviderProps) => {
               myAudioRef.current = stream;
               setMuteStates((prev) => ({ ...prev, [playerName]: false }));
             });
+        } else if (!isMuted && track) {
+          track.stop();
+          stream.removeTrack(track);
+          setMuteStates((prev) => ({ ...prev, [playerName]: true }));
+        } else {
+          const stream = audioStreams?.[targetPlayerName];
+          if (stream instanceof MediaStream) {
+            const audioElement = Array.from(
+              document.querySelectorAll("audio")
+            ).find((audio) => audio.srcObject === stream);
+
+            if (audioElement) {
+              const isMuted = !audioElement.muted;
+              audioElement.muted = isMuted;
+              setMuteStates((prev) => ({
+                ...prev,
+                [targetPlayerName]: isMuted,
+              }));
+            }
+          }
         }
       }
     },
-    [audioStreams, playerName]
+    [audioStreams, playerName, muteStates, selectedDeviceId]
   );
 
   return (
