@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.2.4 (2025-04-09)
+
+
+### Bug Fixes
+
+* audiocontext ([5fe497b](https://github.com/jerobas/queemo/commit/5fe497b7ac03b05cd570e7c78535f47735c887a1))
+
 ### 0.2.3 (2025-04-09)
 
 
