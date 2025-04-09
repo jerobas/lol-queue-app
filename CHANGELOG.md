@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.2.2 (2025-04-09)
+
+
+### Features
+
+* Second part of autoUpdate ([27eb84e](https://github.com/jerobas/queemo/commit/27eb84e0500ae5e9f84db3774bc6ce103ee0efeb))
+
 ### 0.2.1 (2025-04-09)
 
 
