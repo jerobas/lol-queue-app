@@ -47,7 +47,7 @@ jobs:
           npx standard-version --no-verify
           git push --follow-tags origin master
           tag=$(git describe --tags)
-          gh release create "$tag" --generate-notes release/**/*.exe
+          gh release create "$tag" --generate-notes release/**/*.exe release/latest.yml
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         shell: bash

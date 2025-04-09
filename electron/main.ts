@@ -5,6 +5,7 @@ import { getLockFile } from "./helpers/lockfile";
 import ApiService from "./helpers/axios";
 import isProcessRunning from "./helpers/inspect";
 import { IpcMethod } from "../src/interfaces";
+import { getAutoUpdater } from "./helpers/auto-updater";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = path.join(__dirname, "..");
@@ -19,6 +20,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
 
 let api: ApiService;
 let win: BrowserWindow | null;
+const autoUpdater = getAutoUpdater();
 
 function createWindow() {
   isProcessRunning().then((isRunning) => {
@@ -69,7 +71,12 @@ app.on("activate", () => {
   }
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow()
+
+  if(app.isPackaged)
+    autoUpdater.checkForUpdatesAndNotify();
+});
 
 ipcMain.handle(IpcMethod.GET, async (_event, endpoint: string) => {
   try {
