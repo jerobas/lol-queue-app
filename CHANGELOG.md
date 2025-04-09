@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.3.3 (2025-04-09)
+
+
+### Bug Fixes
+
+* leaveRoom, accept, styles ([83f0589](https://github.com/jerobas/queemo/commit/83f058976cb1cfe2b61e30dbda105c7b9272b3f0))
+* todo ([9e14c3b](https://github.com/jerobas/queemo/commit/9e14c3b1cef8c318a43a1304a9ac3d5f97a36cf3))
+
 ### 1.3.2 (2025-04-09)
 
 ### 1.3.1 (2025-04-09)
