@@ -1,10 +1,11 @@
 {
-  "author": "flaviozno and jaonolo",
-  "description": "A simple way to accept queue and a easy voip app for League Of Legends",
+  "author": "@flaviozno and @jaonolo",
+  "description": "Uma forma simples e rápida de aceitar partidas e se comunicar. O VOIP do League Of Legends chegou!",
   "name": "queemo",
   "private": true,
   "version": "0.2.4",
   "type": "module",
+  "homepage": "https://jerobas.github.io/queemo/",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
