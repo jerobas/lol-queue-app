@@ -1,13 +1,138 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Queemo</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body style="background-color: #1e1e1e; color: #f5f5f5; overflow-x: hidden">
+    <div class="relative min-h-screen">
+      <header
+        class="relative py-6 px-4 md:px-8 flex justify-between items-center z-10"
+      >
+        <h1 class="text-2xl font-extrabold tracking-wide text-green-400">Queemo</h1>
+        <div>
+          <a
+            href="https://github.com/jerobas/queemo"
+            target="_blank"
+            class="bg-gray-600 hover:bg-gray-700 transition p-2 rounded-lg text-white font-bold shadow-lg inline-flex items-center justify-center"
+          >
+            <i class="fa-brands fa-github text-xl"></i>
+          </a>
+        </div>
+      </header>
+      <div
+        class="absolute inset-0 z-0"
+        style="
+          background-image: radial-gradient(
+            circle,
+            #2a2a2a 1px,
+            transparent 3px
+          );
+          background-size: 20px 20px;
+        "
+      ></div>
+
+      <section class="relative text-center py-16 md:py-24 z-10">
+        <h2 class="text-5xl font-extrabold leading-tight text-green-400">
+          Seu escoterio sempre em alerta!
+        </h2>
+        <p class="mt-4 text-lg text-gray-400 max-w-xl mx-auto">
+          Aceite partidas sem problemas e tenha acesso ao VOIP, sem necessidade
+          de outros programas.
+        </p>
+      </section>
+
+      <div class="flex justify-center items-center my-8">
+        <i
+          class="fas fa-chevron-down animate-bounce transition-opacity duration-300"
+        ></i>
+      </div>
+
+      <section
+        class="section gs-reveal relative py-16 px-4 md:px-8 text-center bg-[#252525] rounded-2xl mx-4 md:mx-16 lg:mx-32 shadow-lg z-10 mt-16 md:mt-24"
+      >
+        <h2 class="text-4xl font-extrabold text-green-400">
+          Por que escolher a Queemo?
+        </h2>
+        <p class="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">
+          Agora se comuniar com seu time ficou mais fácil! Chega de criar salas
+          no discord quando a partida começar. No Queemo, o VOIP nasce e morre
+          junto com a sua partida, sem precisar se preocupar!
+        </p>
+      </section>
+
+      <div class="flex justify-center items-center my-8">
+        <i
+          class="fas fa-chevron-down animate-bounce transition-opacity duration-300"
+        ></i>
+      </div>
+
+      <section class="section gs-reveal relative py-16 text-center z-10">
+        <h2 class="text-4xl font-extrabold text-green-400">Em progresso 🪖</h2>
+        <p class="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">
+          Lembre-se, o Queemo está em BETA ainda, por isso existem BUGS mas
+          estamos trabalhando para resolvê-los.
+        </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-8">
+          <div id="image-carousel" class="splide mx-auto w-full max-w-4xl  bg-transparent" aria-label="Queemo Slides">
+            <div class="splide__track">
+              <ul class="splide__list">
+                <li class="splide__slide">
+                  <img src="./assets/queeue.png" alt="Queemo Home" class="rounded-2xl mx-auto w-full max-h-[600px] object-contain  bg-transparent" />
+                </li>
+                <li class="splide__slide">
+                  <img src="./assets/mic.png" alt="Config" class="rounded-2xl mx-auto w-full max-h-[600px] object-contain" />
+                </li>
+                <li class="splide__slide">
+                  <img src="./assets/voip.png" alt="VOIP page" class="rounded-2xl mx-auto w-full max-h-[600px] object-contain" />
+                </li>
+              </ul>
+            </div>
+          </div>
+      </section>
+    </div>
   </body>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      new Splide('#image-carousel', {
+        type: 'loop',
+        perPage: 1,
+        autoplay: true,
+        interval: 3000,
+        pauseOnHover: true,
+      }).mount();
+  
+      gsap.registerPlugin(ScrollTrigger);
+  
+      gsap.utils.toArray("section").forEach(section => {
+        gsap.from(section, {
+          opacity: 0,
+          y: 60,
+          duration: 1.2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 90%",
+            toggleActions: "play reset play reset",
+          },
+        });
+      });
+    });
+  </script>  
 </html>
