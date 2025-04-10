@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.2.6 (2025-04-10)
+
+
+### Features
+
+* Moves code to create better project structure ([d518019](https://github.com/jerobas/queemo/commit/d518019962a53eb654c5cd94ff158368c23098b3))
+
 ### 0.2.5 (2025-04-10)
 
 
